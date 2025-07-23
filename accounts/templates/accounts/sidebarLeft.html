@@ -1,0 +1,9 @@
+{% load static %}
+
+<div class="col-lg-2 ">
+
+    {% for DTOSidebarleft in DTOSidebarlefts %}
+    <img src="{% static DTOSidebarleft.ImageURL %}" width=100%><br><br>
+    {% endfor %}
+
+</div>

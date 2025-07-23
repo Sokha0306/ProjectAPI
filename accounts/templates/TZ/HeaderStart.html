@@ -1,0 +1,61 @@
+{% load static %}
+
+ <div class="header-area">
+            <div class="main-header header-sticky">
+                <div class="container-fluid">
+                    <div class="menu-wrapper">
+                        <!-- Logo -->
+                        <div class="logo">
+                            <a href="/"><img src="{% static 'StaticTZ/assets/img/logo/logo.png' %}" alt=""></a>
+                        </div>
+                        <!-- Main-menu -->
+                        <div class="main-menu d-none d-lg-block">
+                            <nav>                                                
+                                <ul id="navigation">  
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="{% url 'ShopTZ' %}">shop</a></li>
+                                    <li><a href="{% url 'AboutTZ' %}">about</a></li>
+                                    <li class="hot"><a href="#">Latest</a>
+                                        <ul class="submenu">
+                                            <li><a href="{% url 'ShopTZ' %}"> Product list</a></li>
+                                            <li><a href="{% url 'ProDetailTZ' %}"> Product Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{% url 'BlogTZ' %}">Blog</a>
+                                        <ul class="submenu">
+                                            <li><a href="{% url 'BlogTZ' %}">Blog</a></li>
+                                            <li><a href="{% url 'BlogDetailTZ' %}">Blog Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <!--- <li><a href="#">Pages</a>
+                                        <ul class="submenu">
+                                            <li><a href="{% url 'LoginTZ' %}">Login</a></li>
+                                            <li><a href="{% url 'CartTZ' %}">Cart</a></li>
+                                            <li><a href="{% url 'ConfirmTZ' %}">Confirmation</a></li>
+                                            <li><a href="{% url 'CheckoutTZ' %}">Product Checkout</a></li>
+                                        </ul>
+                                    </li> -->
+                                    <li><a href="{% url 'ContactTZ' %}">Contact</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- Header Right -->
+                        <div class="header-right">
+                            <ul>
+                                <li>
+                                    <div class="nav-search search-switch">
+                                        <span class="flaticon-search"></span>
+                                    </div>
+                                </li>
+                                <li> <a href="{% url 'LoginTZ' %}"><span class="flaticon-user"></span></a></li>
+                                <li><a href="{% url 'CartTZ' %}"><span class="flaticon-shopping-cart"></span></a> </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
