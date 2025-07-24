@@ -15,6 +15,6 @@ urlpatterns = [
     path('ConfirmTZ/', views.ConfirmTZ, name='ConfirmTZ'),
     path('CheckoutTZ/', views.CheckoutTZ, name='CheckoutTZ'),
     path('ContactTZ/', views.ContactTZ, name='ContactTZ'),
-
-
+    path('CheckoutTZ/', views.CheckoutTZ, name='CheckoutTZ'),
+    path('ConfirmationTZ/', views.ConfirmationTZ, name='ConfirmationTZ'),
 ]

@@ -41,3 +41,9 @@ def CheckoutTZ(request):
 def ContactTZ(request):
     return render(request, 'TZ/contact.html')
 
+def CheckoutTZ(request):
+    return render(request, 'TZ/checkout.html')
+
+def ConfirmationTZ (request):
+    return render(request, 'TZ/confirmation.html')
+
