@@ -6,6 +6,21 @@
     {% include 'TZ/head.html' %}
     <!-- CSS here -->
        {% include 'TZ/CSS.html' %}
+       <style>
+  /* Center the row using flex */
+  .blog_area .row {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Optional: limit blog width for better readability */
+  .blog_left_sidebar {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+</style>
+
 </head>
 <body>
     <header>
@@ -37,13 +52,13 @@
     </main>
     <footer>
         <!-- Footer Start-->
-       {% include 'TZ/FooterStart.html' %}
+        {% include 'TZ/FooterStart.html' %}
         <!-- Footer End-->
     </footer>
     <!--? Search model Begin -->
     {% include 'TZ/SearchModelBegin.html' %}
     <!-- Search model end -->
-
+     
     <!-- JS here -->
 
    {% include 'TZ/JShere.html' %}
