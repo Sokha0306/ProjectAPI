@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,20 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'accounts',
     'ckeditor',
+    'ckeditor_uploader',
     'rest_framework',
+    
 ]
-
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS =[
-    BASE_DIR / 'static/',
-]
-
-MEDIA_URL = '/'
-
-MEDIA_ROOT = Path(BASE_DIR) / 'static/'
+ROOT_URLCONF = 'crm.urls'
 
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
@@ -69,6 +64,19 @@ CKEDITOR_CONFIGS = {
         )
     },
 }
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS =[
+    BASE_DIR / 'static/',
+]
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 
 MIDDLEWARE = [

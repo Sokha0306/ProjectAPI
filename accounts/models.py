@@ -4,6 +4,14 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 
+class AccessToken(models.Model):
+    token = models.CharField(max_length=255, unique=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.token
+
+
 class TopBanner(models.Model):
     Logo= models.ImageField(upload_to='Logo/', null=True, blank=True)
     def __str__(self):
@@ -65,7 +73,7 @@ class ProductCategory(models.Model):
 
 
 class ProductList(models.Model):
-    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, related_name='productlist')
+    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True)
     ProLName = models.CharField(max_length=200,null=True)
     ProLImage= models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProLPrice= models.CharField(max_length=200,null=True)
@@ -76,6 +84,7 @@ class ProductList(models.Model):
 
 
 class ProductDetail(models.Model):
+    ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True)
     ProDeName = models.CharField(max_length=200,null=True)
     ProDeDescription = RichTextUploadingField(null=True)
     ProDeQuentity= models.CharField(max_length=200,null=True)
@@ -114,7 +123,6 @@ class ContactUs(models.Model):
  
 
 
-
 class AboutUs(models.Model):
     Title = models.CharField(max_length=200,null=True)
     Description = RichTextUploadingField(null=True)
@@ -126,3 +134,25 @@ class Footer(models.Model):
     FooterName = models.CharField(max_length=200,null=True)
     def __str__(self):
             return f'{self.id} -> {self.FooterName}'
+    
+
+class QRCode(models.Model):
+    qrName = models.CharField(max_length=100)
+    qrImage = models.ImageField(upload_to='images/qrcodes/')
+    def __str__(self): return self.qrName
+
+    
+
+class Order(models.Model):
+    customerName = models.CharField(max_length=100)
+    customerPhone = models.CharField(max_length=20)
+    orderDate = models.DateTimeField(auto_now_add=True)
+    totalAmount = models.DecimalField(max_digits=10, decimal_places=2)
+    QRCodeInvoice = models.ImageField(upload_to='images/QRCodeInvoice/',null=True,blank=True)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    productName = models.CharField(max_length=200)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    qty = models.IntegerField()
