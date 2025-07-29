@@ -5,7 +5,6 @@ from rest_framework import viewsets
 from .authentication import QueryParamAccessTokenAuthentication
 from .models import *
 from .serializers import *
-
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import AuthenticationFailed
 

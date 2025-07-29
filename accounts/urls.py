@@ -4,7 +4,6 @@ from .views import *
 from rest_framework.routers import DefaultRouter
 from .views import *
 
-
 router = DefaultRouter()
 router.register('proList', ProductListViewSet)
 router.register('proDetail', ProductDetailViewSet)
@@ -15,7 +14,7 @@ router.register('qrcodes', QRCodeViewSet)
 router.register('orders', OrderViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('API/', include(router.urls)),
     path('', views.IndexTZ, name='IndexTZ'),
     path('ShopTZ/', views.ShopTZ, name='ShopTZ'),
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
