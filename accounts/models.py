@@ -18,6 +18,23 @@ class TopBanner(models.Model):
         return f'{self.id}'
 
 
+class ImageType(models.Model): 
+    ImageTypeName = models.CharField(max_length=200, null=True) 
+    ImageTypeDate = models.DateTimeField(auto_now_add=True, null=True) 
+    def __str__(self):          
+        return f'{self.id} {self.ImageTypeName}'
+    
+class Image(models.Model): 
+    ImageName = models.CharField(max_length=200, null=True) 
+    ImageURL = models.ImageField(upload_to='images/Dynamic/',null=True,blank=True) 
+    ImageLink = models.CharField(max_length=200, null=True) 
+    ImageTypeID = models.ForeignKey(ImageType, on_delete=models.CASCADE, null=True) 
+    Active = models.CharField(max_length=200, null=True) 
+    ImageDate = models.DateTimeField(auto_now_add=True, null=True) 
+    def __str__(self):          
+        return f'{self.ImageName}'
+
+
 class menu(models.Model):
     MenuName = models.CharField(max_length=200,null=True)
     def __str__(self):

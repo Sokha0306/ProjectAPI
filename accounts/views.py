@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from rest_framework import viewsets
 
 from .authentication import QueryParamAccessTokenAuthentication
@@ -10,6 +10,66 @@ from rest_framework.exceptions import AuthenticationFailed
 
 
 # Create your views here.
+
+def add_to_cart(request, product_id):
+    cart = request.session.get('cart', {})
+    if str(product_id) in cart:
+        cart[str(product_id)]['quantity'] += 1
+    else:
+        product = ProductList.objects.get(id=product_id)
+        cart[str(product_id)] = {
+            'productName': product.productName,
+            'price': float(product.price),
+            'quantity': 1
+        }
+    request.session['cart'] = cart
+    return redirect('view_cart')
+
+def view_cart(request):
+    cart = request.session.get('cart', {})
+    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+    return render(request, 'TZ/cart.html', {'cart': cart, 'total_price': total_price})
+
+def remove_from_cart(request, product_id):
+    cart = request.session.get('cart', {})
+    cart.pop(str(product_id), None)
+    request.session['cart'] = cart
+    return redirect('view_cart')
+
+def product_list(request):
+    products = ProductList.objects.all()
+    return render(request, 'TZ/shop.html', {'products': products})
+
+
+
+
+class ImageTypeView(viewsets.ModelViewSet):
+    queryset = ImageType.objects.all()
+    serializer_class = ImageTypeSerializer
+
+class ImageView(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # or use custom permission
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        ProCategoryID = self.request.query_params.get('ProCategoryID')
+        if ProCategoryID:
+            queryset = queryset.filter(ProCategoryID=ProCategoryID)
+        return queryset
+
+
+
+
+
+
+
+
 
 
 def IndexTZ(request): 
@@ -50,6 +110,9 @@ def CheckoutTZ(request):
 
 def ConfirmationTZ (request):
     return render(request, 'TZ/confirmation.html')
+
+def CartTZ (request):
+    return render(request, 'TZ/cart.shop.html')
 
 
 

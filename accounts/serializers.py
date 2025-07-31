@@ -2,6 +2,18 @@ import json
 from rest_framework import serializers
 from .models import *
 
+
+class ImageTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageType
+        fields = '__all__'
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+
 class ProductListSerializer(serializers.ModelSerializer):
     class Meta:        
         model =  ProductList
