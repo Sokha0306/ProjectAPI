@@ -16,23 +16,39 @@ router.register('orders', OrderViewSet)
 
 urlpatterns = [
     path('API/', include(router.urls)),
+
     path('', views.IndexTZ, name='IndexTZ'),
+
     path('shop/', product_list, name='ShopTZ'),
+
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
+
     path('ProDetailTZ/', views.ProDetailTZ, name='ProDetailTZ'),
+
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
+
     path('BlogDetailTZ/', views.BlogDetailTZ, name='BlogDetailTZ'),
+
     path('LoginTZ/', views.LoginTZ, name='LoginTZ'),
+
     path('CartTZ/', views.CartTZ, name='CartTZ'),
+
     path('ConfirmTZ/', views.ConfirmTZ, name='ConfirmTZ'),
+
     path('CheckoutTZ/', views.CheckoutTZ, name='CheckoutTZ'),
+
     path('ContactTZ/', views.ContactTZ, name='ContactTZ'),
+
     path('ConfirmationTZ/', views.ConfirmationTZ, name='ConfirmationTZ'),
+
     path('CartTZ/', views.CartTZ, name='CartTZ'),
 
     path('productList/', views.product_list, name='product_list'),
+
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    
     path('cart/', views.view_cart, name='view_cart'),
+
     path('remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 ]
 

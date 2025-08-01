@@ -42,38 +42,10 @@ def product_list(request):
 
 
 
+def IndexTZ(request):
+    new_arrivals = NewArrivals.objects.all()
+    return render(request, 'TZ/index.html', {'new_arrivals': new_arrivals})
 
-class ImageTypeView(viewsets.ModelViewSet):
-    queryset = ImageType.objects.all()
-    serializer_class = ImageTypeSerializer
-
-class ImageView(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    authentication_classes = [QueryParamAccessTokenAuthentication]
-    permission_classes = [AllowAny]  # or use custom permission
-    def get_queryset(self):
-        token = self.request.query_params.get('token')
-        if not AccessToken.objects.filter(token=token, is_active=True).exists():
-            from django.http import JsonResponse
-            raise AuthenticationFailed("Invalid or inactive token")
-        queryset = super().get_queryset()
-        ProCategoryID = self.request.query_params.get('ProCategoryID')
-        if ProCategoryID:
-            queryset = queryset.filter(ProCategoryID=ProCategoryID)
-        return queryset
-
-
-
-
-
-
-
-
-
-
-def IndexTZ(request): 
-    return render(request, 'TZ/index.html')
 
 def ShopTZ(request):
     return render(request, 'TZ/shop.html')
@@ -116,11 +88,13 @@ def CartTZ (request):
 
 
 
+
 class ProductListViewSet(viewsets.ModelViewSet):
     queryset = ProductList.objects.all()
     serializer_class = ProductListSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
-    permission_classes = [AllowAny]  # or use custom permission
+    permission_classes = [AllowAny]  # requires token
+
     def get_queryset(self):
         token = self.request.query_params.get('token')
         if not AccessToken.objects.filter(token=token, is_active=True).exists():
@@ -128,6 +102,9 @@ class ProductListViewSet(viewsets.ModelViewSet):
             raise AuthenticationFailed("Invalid or inactive token")
         queryset = super().get_queryset()
         return queryset
+
+
+
     
 
 
@@ -188,3 +165,26 @@ class OrderViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context.update({"request": self.request})
         return context
+
+
+
+class ImageTypeView(viewsets.ModelViewSet):
+    queryset = ImageType.objects.all()
+    serializer_class = ImageTypeSerializer
+
+
+class ImageView(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # or use custom permission
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        ProCategoryID = self.request.query_params.get('ProCategoryID')
+        if ProCategoryID:
+            queryset = queryset.filter(ProCategoryID=ProCategoryID)
+        return queryset
