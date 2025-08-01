@@ -88,7 +88,6 @@ class ProductCategory(models.Model):
 
 
 
-
 class ProductList(models.Model):
     ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True)
     ProLName = models.CharField(max_length=200,null=True)
