@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from rest_framework import viewsets
@@ -42,9 +43,25 @@ def product_list(request):
 
 
 
+
+
+
 def IndexTZ(request):
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
     new_arrivals = NewArrivals.objects.all()
-    return render(request, 'TZ/index.html', {'new_arrivals': new_arrivals})
+    popular_items = PopularItems.objects.all()
+
+    context = {
+        'new_arrivals': new_arrivals,
+        'popular_items': popular_items,
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+    }
+    return render(request, 'TZ/index.html', context)
+
 
 
 def ShopTZ(request):

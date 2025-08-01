@@ -10,33 +10,25 @@
                         </div>
                         <!-- Main-menu -->
                         <div class="main-menu d-none d-lg-block">
-                            <nav>                                                
-                                <ul id="navigation">  
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="{% url 'ShopTZ' %}">shop</a></li>
-                                    <li><a href="{% url 'AboutTZ' %}">about</a></li>
-                                    <li class="hot"><a href="#">Latest</a>
-                                        <ul class="submenu">
-                                            <li><a href="{% url 'ShopTZ' %}"> Product list</a></li>
-                                            <li><a href="{% url 'ProDetailTZ' %}"> Product Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="{% url 'BlogTZ' %}">Blog</a>
-                                        <ul class="submenu">
-                                            <li><a href="{% url 'BlogTZ' %}">Blog</a></li>
-                                            <li><a href="{% url 'BlogDetailTZ' %}">Blog Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <!--- <li><a href="#">Pages</a>
-                                        <ul class="submenu">
-                                            <li><a href="{% url 'LoginTZ' %}">Login</a></li>
-                                            <li><a href="{% url 'CartTZ' %}">Cart</a></li>
-                                            <li><a href="{% url 'ConfirmTZ' %}">Confirmation</a></li>
-                                            <li><a href="{% url 'CheckoutTZ' %}">Product Checkout</a></li>
-                                        </ul>
-                                    </li> -->
-                                    <li><a href="{% url 'ContactTZ' %}">Contact</a></li>
-                                </ul>
+                            <nav>        
+                                {% for Menu in Menus %}                                        
+                                    <ul id="navigation">  
+                                            <li>
+                                                <a href="#">{{Menu.MenuName}}</a>
+                                                    <ul class="submenu">
+                                                        {% for DTSubMenu in DTSubMenus %}
+                                                            {% if DTMenu.id == DTSubMenu.MenuID_id %}
+                                                                <li><a href="#">{{DTSubMenu.SubMenuName}}</a>
+                                                                    <ul class="{% if DTMenu.sub_count > 0 %}submenu{% endif %}">
+                                                                    </ul>
+                                                                </li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        
+                                                    </ul>
+                                            </li>
+                                    </ul>
+                                {% endfor %}
                             </nav>
                         </div>
                         <!-- Header Right -->

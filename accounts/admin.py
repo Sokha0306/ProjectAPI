@@ -3,14 +3,13 @@ from .models import *
 # Register your models here.
 
 admin.site.register(TopBanner)
-admin.site.register(menu)
+admin.site.register(Menu)
 admin.site.register(SubMenu)
 
 admin.site.register(Slide)
 
 admin.site.register(NewArrivals)
 admin.site.register(PopularItems)
-admin.site.register(ProductOfChoice)
 admin.site.register(ProductCategory)
 admin.site.register(ProductList)
 admin.site.register(ProductDetail)

@@ -35,23 +35,23 @@ class Image(models.Model):
         return f'{self.ImageName}'
 
 
-class menu(models.Model):
-    MenuName = models.CharField(max_length=200,null=True)
+class Menu (models.Model):
+    MenuName =  models.CharField(max_length=200,null=True)
     def __str__(self):
-        return f'{self.id} -> {self.MenuName}'
-
+        return f'{self.MenuName}'
 
 class SubMenu(models.Model):
     SubMenuName = models.CharField(max_length=200,null=True)
-    MenuID = models.ForeignKey(menu, on_delete=models.CASCADE, null=True, related_name='submenus')
+    MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='Submenus')
     def __str__(self):
         return f'{self.MenuID.MenuName} -> {self.SubMenuName}'
 
 
 class Slide(models.Model):
     SlideName = models.CharField(max_length=200,null=True)
+    SildeHead = RichTextUploadingField(null=True)
+    SlideBody = RichTextUploadingField(null=True)
     SlideImage = models.ImageField(upload_to='SlideImage/', null=True, blank=True)
-    SlideDescription = RichTextUploadingField(null=True)
     def __str__(self):
             return f'{self.id} -> {self.SlideName}'
 
@@ -68,16 +68,9 @@ class PopularItems(models.Model):
     PopIImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
     PopIName = models.CharField(max_length=200,null=True)
     PopIPrice = models.CharField(max_length=200,null=True)
-    PopIDescription = RichTextUploadingField(null=True)
+    PopIDescription = RichTextUploadingField(null=True, blank=True)
     def __str__(self):
             return f'{self.id} -> {self.PopIName}  {self.PopIImage}'
-
-
-class ProductOfChoice(models.Model):
-    ProCImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
-    ProCDescription = RichTextUploadingField(null=True)
-    def __str__(self):
-            return f'{self.id} -> {self.ProCImage}  {self.ProCDescription}'
 
 
 
