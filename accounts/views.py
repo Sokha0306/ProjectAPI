@@ -37,9 +37,7 @@ def remove_from_cart(request, product_id):
     request.session['cart'] = cart
     return redirect('view_cart')
 
-def product_list(request):
-    products = ProductList.objects.all()
-    return render(request, 'TZ/shop.html', {'products': products})
+
 
 
 
@@ -64,43 +62,197 @@ def IndexTZ(request):
 
 
 def ShopTZ(request):
-    return render(request, 'TZ/shop.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    products = ProductList.objects.all()
+
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        'products' : products,
+    }
+    return render(request, 'TZ/shop.html', context)
+    
 
 def AboutTZ(request):
-    return render(request, 'TZ/about.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/about.html', context)
+
+
 
 def ProDetailTZ(request):
-    return render(request, 'TZ/product_details.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    prodetails = ProductDetail.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        'prodetails' : prodetails,
+    }
+    return render(request, 'TZ/product_details.html', context)
 
 def BlogTZ(request):
-    return render(request, 'TZ/blog.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/blog.html',context)
+
+
+
 
 def BlogDetailTZ(request):
-    return render(request, 'TZ/blog-details.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/blog-details.html', context)
+
+
 
 def LoginTZ(request):
-    return render(request, 'TZ/login.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/login.html', context)
 
 def CartTZ(request):
-    return render(request, 'TZ/cart.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/cart.html', context)
 
 def ConfirmTZ(request):
-    return render(request, 'TZ/confirmation.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/confirmation.html', context)
 
 def CheckoutTZ(request):
-    return render(request, 'TZ/checkout.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/checkout.html', context)
 
 def ContactTZ(request):
-    return render(request, 'TZ/contact.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/contact.html', context)
 
 def CheckoutTZ(request):
-    return render(request, 'TZ/checkout.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/checkout.html', context)
 
 def ConfirmationTZ (request):
-    return render(request, 'TZ/confirmation.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/confirmation.html', context)
 
 def CartTZ (request):
-    return render(request, 'TZ/cart.shop.html')
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        
+    }
+    return render(request, 'TZ/cart.shop.html', context)
 
 
 

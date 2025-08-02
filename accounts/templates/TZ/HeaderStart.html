@@ -6,8 +6,13 @@
                     <div class="menu-wrapper">
                         <!-- Logo -->
                         <div class="logo">
-                            <img src="{{ topBanner.Logo.url }}" alt="Logo" style="width: 250px; height: auto;">
+                            {% if topBanner and topBanner.Logo %}
+                                <a href="{% url 'IndexTZ' %}">
+                                    <img src="{{ topBanner.Logo.url }}" alt="Logo" class="small-logo" style="width: 250px; height: auto;">
+                                </a>
+                            {% endif %}
                         </div>
+
                         <!-- Main-menu -->
                        <div class="main-menu d-none d-lg-block">
                             <nav>
@@ -31,8 +36,6 @@
                                 </ul>
                             </nav>
                         </div>
-
-
 
                         <!-- Header Right -->
                         <div class="header-right">

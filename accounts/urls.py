@@ -19,7 +19,7 @@ urlpatterns = [
 
     path('', views.IndexTZ, name='IndexTZ'),
 
-    path('shop/', product_list, name='ShopTZ'),
+    path('shop/', ShopTZ, name='ShopTZ'),
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
 
@@ -42,8 +42,6 @@ urlpatterns = [
     path('ConfirmationTZ/', views.ConfirmationTZ, name='ConfirmationTZ'),
 
     path('CartTZ/', views.CartTZ, name='CartTZ'),
-
-    path('productList/', views.product_list, name='product_list'),
 
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     

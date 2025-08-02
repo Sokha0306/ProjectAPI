@@ -83,8 +83,8 @@ class ProductCategory(models.Model):
 
 
 class ProductList(models.Model):
-    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True)
-    ProLName = models.CharField(max_length=200,null=True)
+    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
+    ProLName = models.CharField(max_length=200,null=True, blank=True)
     ProLImage= models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProLPrice= models.CharField(max_length=200,null=True)
     def __str__(self):
@@ -94,9 +94,17 @@ class ProductList(models.Model):
 
 
 class ProductDetail(models.Model):
-    ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True)
+    popular_item_ID  = models.ForeignKey(PopularItems, on_delete=models.CASCADE, null=True, blank=True)
+    new_arrival_ID = models.ForeignKey(NewArrivals, on_delete=models.CASCADE, null=True, blank=True)
+    ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True, blank=True)
+    pro_detail_image_1 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_2 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_3 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_4 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_5 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProDeName = models.CharField(max_length=200,null=True)
-    ProDeDescription = RichTextUploadingField(null=True)
+    Pro_detail_description = RichTextUploadingField(null=True)
+    ProDeDetail = RichTextUploadingField(null=True)
     ProDeQuentity= models.CharField(max_length=200,null=True)
     def __str__(self):
             return f'{self.id} -> {self.ProDeName} -> {self.ProDeDescription} '
