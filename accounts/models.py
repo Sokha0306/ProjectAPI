@@ -15,7 +15,7 @@ class AccessToken(models.Model):
 class TopBanner(models.Model):
     Logo= models.ImageField(upload_to='Logo/', null=True, blank=True)
     def __str__(self):
-        return f'{self.id}'
+        return f'{self.id} --> {self.Logo}'
 
 
 class ImageType(models.Model): 
@@ -35,14 +35,15 @@ class Image(models.Model):
         return f'{self.ImageName}'
 
 
-class Menu (models.Model):
-    MenuName =  models.CharField(max_length=200,null=True)
+class Menu(models.Model):
+    MenuName = models.CharField(max_length=200, null=False, default='Menu')  # <--- update
     def __str__(self):
         return f'{self.MenuName}'
 
+
 class SubMenu(models.Model):
     SubMenuName = models.CharField(max_length=200,null=True)
-    MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='Submenus')
+    MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='submenus')
     def __str__(self):
         return f'{self.MenuID.MenuName} -> {self.SubMenuName}'
 
