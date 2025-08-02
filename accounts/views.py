@@ -43,10 +43,8 @@ def product_list(request):
 
 
 
-
-
-
 def IndexTZ(request):
+    topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
@@ -59,6 +57,7 @@ def IndexTZ(request):
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
     }
     return render(request, 'TZ/index.html', context)
 
