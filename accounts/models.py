@@ -42,7 +42,7 @@ class Menu (models.Model):
 
 class SubMenu(models.Model):
     SubMenuName = models.CharField(max_length=200,null=True)
-    MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='Submenus')
+    MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='submenus')
     def __str__(self):
         return f'{self.MenuID.MenuName} -> {self.SubMenuName}'
 
