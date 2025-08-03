@@ -9,6 +9,21 @@
     <!-- CSS here -->
     {% include 'TZ/CSS.html' %}
 </head>
+<style>
+    .popular-scroll {
+        display: flex;
+        overflow-x: auto;
+        gap: 20px;
+        padding-bottom: 10px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .popular-scroll > div {
+        scroll-snap-align: start;
+        min-width: 250px;
+        flex-shrink: 0;
+    }
+</style>
 
 <body>
     <!--? Preloader Start -->
