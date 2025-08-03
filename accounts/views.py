@@ -284,20 +284,9 @@ class ProductListViewSet(viewsets.ModelViewSet):
 class ProductDetailViewSet(viewsets.ModelViewSet):
     queryset = ProductDetail.objects.all()
     serializer_class = ProductDetailSerializer
-
-    def get_queryset(self):
-        proList_id = self.request.query_params.get('proList')
-        if proList_id:
-            return ProductDetail.objects.filter(ProListID=proList_id)
-        return ProductDetail.objects.all()
-    
-
-
-class BlogViewSet(viewsets.ModelViewSet):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
-    permission_classes = [AllowAny]  # or use custom permission
+    permission_classes = [AllowAny]  # requires token
+
     def get_queryset(self):
         token = self.request.query_params.get('token')
         if not AccessToken.objects.filter(token=token, is_active=True).exists():
@@ -307,57 +296,110 @@ class BlogViewSet(viewsets.ModelViewSet):
         return queryset
     
 
-class BlogDetailViewSet(viewsets.ModelViewSet):
-    queryset = BlogDetails.objects.all()
-    serializer_class = BlogDetailSerializer
 
-    def get_queryset(self):
-        blogDetail_ID = self.request.query_params.get('blogDetail')
-        if blogDetail_ID:
-            return ProductDetail.objects.filter(BlogID=blogDetail_ID)
-        return ProductDetail.objects.all()
-    
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = ProductCategory.objects.all()
-    serializer_class = CategorySerializer
-
-
-
-class QRCodeViewSet(viewsets.ModelViewSet):
-    queryset = QRCode.objects.all()
-    serializer_class = QRCodeSerializer
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    serializer_class = OrderSerializer
-    queryset = Order.objects.all()
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update({"request": self.request})
-        return context
-
-
-
-class ImageTypeView(viewsets.ModelViewSet):
-    queryset = ImageType.objects.all()
-    serializer_class = ImageTypeSerializer
-
-
-class ImageView(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
+class BlogViewSet(viewsets.ModelViewSet):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
-    permission_classes = [AllowAny]  # or use custom permission
+    permission_classes = [AllowAny]  # requires token
+
     def get_queryset(self):
         token = self.request.query_params.get('token')
         if not AccessToken.objects.filter(token=token, is_active=True).exists():
             from django.http import JsonResponse
             raise AuthenticationFailed("Invalid or inactive token")
         queryset = super().get_queryset()
-        ProCategoryID = self.request.query_params.get('ProCategoryID')
-        if ProCategoryID:
-            queryset = queryset.filter(ProCategoryID=ProCategoryID)
+        return querysett
+    
+
+class BlogDetailViewSet(viewsets.ModelViewSet):
+    queryset = BlogDetails.objects.all()
+    serializer_class = BlogDetailSerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        return queryset
+    
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = ProductCategory.objects.all()
+    serializer_class = CategorySerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        return queryset
+
+
+
+class QRCodeViewSet(viewsets.ModelViewSet):
+    queryset = QRCode.objects.all()
+    serializer_class = QRCodeSerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        return queryset
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        return queryset
+
+
+
+class ImageTypeView(viewsets.ModelViewSet):
+    queryset = ImageType.objects.all()
+    serializer_class = ImageTypeSerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        return queryset
+
+
+class ImageView(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    authentication_classes = [QueryParamAccessTokenAuthentication]
+    permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
         return queryset
