@@ -309,7 +309,7 @@ class BlogViewSet(viewsets.ModelViewSet):
             from django.http import JsonResponse
             raise AuthenticationFailed("Invalid or inactive token")
         queryset = super().get_queryset()
-        return querysett
+        return queryset
     
 
 class BlogDetailViewSet(viewsets.ModelViewSet):

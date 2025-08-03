@@ -31,17 +31,18 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:        
-        model =  Blog
-        fields = ['id', 'BlogName', 'BlogID','BlogRate', 'BlogImage']
+        model = Blog
+        fields = ['id', 'BlogName', 'BlogRate', 'BlogImage']
 
 
 class BlogDetailSerializer(serializers.ModelSerializer):
-    BlogID = BlogSerializer(read_only=True)
-    BlogID_id = serializers.PrimaryKeyRelatedField(queryset=ProductList.objects.all(), source='blogID', write_only=True)
+    blogID = BlogSerializer(read_only=True)
+    blogID_id = serializers.PrimaryKeyRelatedField(queryset=Blog.objects.all(), write_only=True)
 
     class Meta:
         model = BlogDetails
         fields = '__all__'
+
 
 
 class CategorySerializer(serializers.ModelSerializer):

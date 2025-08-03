@@ -27,8 +27,6 @@ urlpatterns = [
 
     path('ProDetailTZ/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
 
-
-
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
 
     path('BlogDetailTZ/', views.BlogDetailTZ, name='BlogDetailTZ'),
