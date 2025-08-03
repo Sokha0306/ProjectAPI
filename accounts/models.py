@@ -173,7 +173,7 @@ class AboutUs(models.Model):
     Title_2 = models.CharField(max_length=200,null=True)
     Description_2 = RichTextUploadingField(null=True)
     def __str__(self):
-            return f'{self.id} -> {self.Title} -> {self.Description}'
+            return f'{self.id} -> {self.Title_1} -> {self.Description_1} /n {self.Title_2} -> {self.Description_2}'
  
 
 class Footer(models.Model):
