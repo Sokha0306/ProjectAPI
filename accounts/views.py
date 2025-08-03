@@ -12,19 +12,16 @@ from rest_framework.exceptions import AuthenticationFailed
 
 # Create your views here.
 
-def add_to_cart(request, product_id):
+from django.shortcuts import redirect
+
+def add_to_cart(request, product_type, product_id):
     cart = request.session.get('cart', {})
-    if str(product_id) in cart:
-        cart[str(product_id)]['quantity'] += 1
-    else:
-        product = ProductList.objects.get(id=product_id)
-        cart[str(product_id)] = {
-            'productName': product.productName,
-            'price': float(product.price),
-            'quantity': 1
-        }
+    # Your existing logic to add product here (fetch product, update cart)
+
     request.session['cart'] = cart
-    return redirect('view_cart')
+    return redirect('CartTZ')  # <-- redirect to your desired URL name here
+
+
 
 def view_cart(request):
     cart = request.session.get('cart', {})
@@ -170,6 +167,7 @@ def CartTZ(request):
     }
     return render(request, 'TZ/cart.html', context)
 
+
 def ConfirmTZ(request):
     topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
@@ -252,7 +250,7 @@ def CartTZ (request):
         'topBanner' : topBanner,
         
     }
-    return render(request, 'TZ/cart.shop.html', context)
+    return render(request, 'TZ/cart.html', context)
 
 
 

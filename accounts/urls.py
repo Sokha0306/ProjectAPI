@@ -43,7 +43,7 @@ urlpatterns = [
 
     path('CartTZ/', views.CartTZ, name='CartTZ'),
 
-    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('add-to-cart/<str:product_type>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     
     path('cart/', views.view_cart, name='view_cart'),
 

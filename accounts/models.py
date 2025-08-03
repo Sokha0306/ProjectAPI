@@ -105,9 +105,10 @@ class ProductDetail(models.Model):
     ProDeName = models.CharField(max_length=200,null=True)
     Pro_detail_description = RichTextUploadingField(null=True)
     ProDeDetail = RichTextUploadingField(null=True)
-    ProDeQuentity= models.CharField(max_length=200,null=True)
+    ProDeQuentity = models.IntegerField(null=True, blank=True)
+    ProDePrice = models.CharField(max_length=200,null=True)
     def __str__(self):
-            return f'{self.id} -> {self.ProDeName} -> {self.ProDeDescription} '
+            return f'{self.id} -> {self.ProDeName}'
 
 
 
