@@ -11,6 +11,15 @@ class AccessToken(models.Model):
 
     def __str__(self):
         return self.token
+    
+
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.name
 
 
 class TopBanner(models.Model):
@@ -203,3 +212,6 @@ class OrderItem(models.Model):
     productName = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     qty = models.IntegerField()
+
+
+
