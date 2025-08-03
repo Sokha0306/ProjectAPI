@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.urls import NoReverseMatch, reverse
 
 # Create your models here.
 
@@ -36,16 +37,40 @@ class Image(models.Model):
 
 
 class Menu(models.Model):
-    MenuName = models.CharField(max_length=200, null=False, default='Menu')  # <--- update
+    MenuName = models.CharField(max_length=200, null=False, default='Menu')
+    url_name = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return f'{self.MenuName}'
 
+    @property
+    def url(self):
+        if not self.url_name:
+            return '#'
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
 
 class SubMenu(models.Model):
-    SubMenuName = models.CharField(max_length=200,null=True)
+    SubMenuName = models.CharField(max_length=200, null=True)
     MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='submenus')
+    url_name = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return f'{self.MenuID.MenuName} -> {self.SubMenuName}'
+
+    @property
+    def url(self):
+        if not self.url_name:
+            return '#'
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
+
 
 
 class Slide(models.Model):
@@ -143,8 +168,10 @@ class ContactUs(models.Model):
 
 
 class AboutUs(models.Model):
-    Title = models.CharField(max_length=200,null=True)
-    Description = RichTextUploadingField(null=True)
+    Title_1 = models.CharField(max_length=200,null=True)
+    Description_1 = RichTextUploadingField(null=True)
+    Title_2 = models.CharField(max_length=200,null=True)
+    Description_2 = RichTextUploadingField(null=True)
     def __str__(self):
             return f'{self.id} -> {self.Title} -> {self.Description}'
  

@@ -1,6 +1,6 @@
 from django.db.models import Count
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework import viewsets
 
 from .authentication import QueryParamAccessTokenAuthentication
@@ -91,18 +91,19 @@ def AboutTZ(request):
 
 
 
-def ProDetailTZ(request):
-    topBanner = TopBanner.objects.first()
+def ProDetailTZ(request, id):
+    product = get_object_or_404(ProductDetail, id=id)
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
+    topBanner = TopBanner.objects.first()
     sliders = Slide.objects.all()
-    prodetails = ProductDetail.objects.all()
+
     context = {
+        'prodetail': product,
+        'Menus': Menus,
+        'SubMenus': SubMenus,
+        'topBanner': topBanner,
         'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'prodetails' : prodetails,
     }
     return render(request, 'TZ/product_details.html', context)
 

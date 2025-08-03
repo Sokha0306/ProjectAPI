@@ -19,11 +19,12 @@ urlpatterns = [
 
     path('', views.IndexTZ, name='IndexTZ'),
 
-    path('shop/', ShopTZ, name='ShopTZ'),
+    path('ShopTZ/', ShopTZ, name='ShopTZ'),
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
 
-    path('ProDetailTZ/', views.ProDetailTZ, name='ProDetailTZ'),
+    path('ProDetailTZ/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
+
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
 
