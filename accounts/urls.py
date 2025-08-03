@@ -19,11 +19,12 @@ urlpatterns = [
 
     path('', views.IndexTZ, name='IndexTZ'),
 
-    path('shop/', ShopTZ, name='ShopTZ'),
+    path('ShopTZ/', ShopTZ, name='ShopTZ'),
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
 
-    path('ProDetailTZ/', views.ProDetailTZ, name='ProDetailTZ'),
+    path('ProDetailTZ/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
+
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
 
@@ -43,7 +44,7 @@ urlpatterns = [
 
     path('CartTZ/', views.CartTZ, name='CartTZ'),
 
-    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('add-to-cart/<str:product_type>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     
     path('cart/', views.view_cart, name='view_cart'),
 
