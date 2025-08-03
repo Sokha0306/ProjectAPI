@@ -21,14 +21,12 @@
                                     {% if menu.sub_count > 0 %}
                                     <li>
                                         <a href="{{ menu.url }}">
->
                                         {{ menu.MenuName }}
                                         </a>
                                         <ul class="submenu">
                                         {% for submenu in menu.submenus.all %}
                                             <li>
                                             <a href="{{ submenu.url }}">
->
                                                 {{ submenu.SubMenuName }}
                                             </a>
                                             </li>

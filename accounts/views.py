@@ -80,11 +80,13 @@ def AboutTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    abtus = AboutUs.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'abtus' : abtus,
         
     }
     return render(request, 'TZ/about.html', context)
@@ -112,11 +114,13 @@ def BlogTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    blogs = Blog.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'blogs' : blogs,
         
     }
     return render(request, 'TZ/blog.html',context)
@@ -129,11 +133,13 @@ def BlogDetailTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    blogdetails = BlogDetail.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'blogdetails' : blogdetails,
         
     }
     return render(request, 'TZ/blog-details.html', context)
