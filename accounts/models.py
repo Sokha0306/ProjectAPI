@@ -154,6 +154,7 @@ class BlogDetails(models.Model):
     BlogDeName  = models.CharField(max_length=200,null=True)
     BlogDeImage = models.ImageField(upload_to='BlogImage/', null=True, blank=True)
     BlogDeDescription = RichTextUploadingField(null=True)
+    BlogDeRate = models.FloatField(default=0, null=True, blank=True)
     def __str__(self):
             return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage}'
  
