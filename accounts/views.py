@@ -133,7 +133,7 @@ def BlogDetailTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
-    blogdetails = BlogDetail.objects.all()
+    blogdetails = BlogDetails.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
@@ -308,7 +308,7 @@ class BlogViewSet(viewsets.ModelViewSet):
     
 
 class BlogDetailViewSet(viewsets.ModelViewSet):
-    queryset = BlogDetail.objects.all()
+    queryset = BlogDetails.objects.all()
     serializer_class = BlogDetailSerializer
 
     def get_queryset(self):

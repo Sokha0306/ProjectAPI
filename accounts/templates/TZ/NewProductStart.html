@@ -12,19 +12,19 @@
                 </div>
                 <div class="row">
                    {% for new_arrival in new_arrivals %}
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-new-pro mb-30 text-center">
-                            <div class="product-img">
-                                <img src="{{ new_arrival.NewAImage.url }}" alt="{{ new_arrival.NewAName }}">
-                            </div>
-                            <div class="product-caption">
-                                <h3><a href="{% url 'ProDetailTZ' new_arrival.id %}">{{ new_arrival.NewAName }}</a></h3>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                            <div class="single-new-pro mb-30 text-center">
+                                <div class="product-img">
+                                    <img src="{{ new_arrival.NewAImage.url }}" alt="{{ new_arrival.NewAName }}">
+                                </div>
+                                <div class="product-caption">
+                                    <h3><a href="{% url 'ProDetailTZ' new_arrival.id %}">{{ new_arrival.NewAName }}</a></h3>
 
-                                <span>${{ new_arrival.NewAPrice }}</span>
+                                    <span>${{ new_arrival.NewAPrice }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
 
 
                     

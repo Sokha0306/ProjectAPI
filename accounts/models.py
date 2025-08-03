@@ -149,13 +149,13 @@ class Blog(models.Model):
             return f'{self.id} -> {self.BlogName} -> {self.BlogImage}'
     
 
-class BlogDetail(models.Model):
+class BlogDetails(models.Model):
     BlogID = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True)
     BlogDeName  = models.CharField(max_length=200,null=True)
-    BlogDeImage = models.ImageField(upload_to='SlideImage/', null=True, blank=True)
+    BlogDeImage = models.ImageField(upload_to='BlogImage/', null=True, blank=True)
     BlogDeDescription = RichTextUploadingField(null=True)
     def __str__(self):
-            return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage} '
+            return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage}'
  
 
 class ContactUs(models.Model):

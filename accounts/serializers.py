@@ -40,7 +40,7 @@ class BlogDetailSerializer(serializers.ModelSerializer):
     BlogID_id = serializers.PrimaryKeyRelatedField(queryset=ProductList.objects.all(), source='blogID', write_only=True)
 
     class Meta:
-        model = BlogDetail
+        model = BlogDetails
         fields = '__all__'
 
 
