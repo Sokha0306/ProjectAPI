@@ -45,75 +45,75 @@
         <div class="product_image_area">
             <div class="container">
                 {% for prodetail in prodetails %}
-<div class="row justify-content-center">
-    <div class="col-lg-4">
-        <div class="product_img_slide owl-carousel">
-            {% if prodetail.pro_detail_image_1 %}
-                <div class="single_product_img">
-                    <img src="{{ prodetail.pro_detail_image_1.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
-                </div>
-            {% endif %}
-            {% if prodetail.pro_detail_image_2 %}
-                <div class="single_product_img">
-                    <img src="{{ prodetail.pro_detail_image_2.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
-                </div>
-            {% endif %}
-            {% if prodetail.pro_detail_image_3 %}
-                <div class="single_product_img">
-                    <img src="{{ prodetail.pro_detail_image_3.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
-                </div>
-            {% endif %}
-            {% if prodetail.pro_detail_image_4 %}
-                <div class="single_product_img">
-                    <img src="{{ prodetail.pro_detail_image_4.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
-                </div>
-            {% endif %}
-            {% if prodetail.pro_detail_image_5 %}
-                <div class="single_product_img">
-                    <img src="{{ prodetail.pro_detail_image_5.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="single_product_text text-center">
-            <a href="{% url 'ProDetailTZ' prodetail.id %}">{{ prodetail.ProDeName }}</a>
-            <br>
-            <p>{{ prodetail.Pro_detail_description|safe }}</p>
-            <p>{{ prodetail.ProDeDetail|safe }}</p>
-            <div class="card_area">
-                <div class="product_count_area">
-                    <p>Quantity</p>
-                    <div class="product_count d-inline-block">
-                        <span class="product_count_item inumber-decrement">
-                            <i class="ti-minus"></i>
-                        </span>
-                        <input
-                            type="number"
-                            class="product_count_item input-number"
-                            value="1"
-                            min="1"
-                            max="10"
-                            step="1"
-                            data-price="{{ prodetail.ProDePrice|floatformat:2 }}">
-                        <span class="product_count_item number-increment">
-                            <i class="ti-plus"></i>
-                        </span>
-                    </div>
-                    <p>Total Price:
-                        <span class="price_display" data-price="{{ prodetail.ProDePrice|floatformat:2 }}">
-                            ${{ prodetail.ProDePrice|floatformat:2 }}
-                        </span>
-                    </p>
-                </div>
-                <div class="add_to_cart">
-                    <a href="{% url 'CartTZ' %}" class="btn_3">add to cart</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> <!-- end of row -->
-{% endfor %}
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4">
+                            <div class="product_img_slide owl-carousel">
+                                {% if prodetail.pro_detail_image_1 %}
+                                    <div class="single_product_img">
+                                        <img src="{{ prodetail.pro_detail_image_1.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
+                                    </div>
+                                {% endif %}
+                                {% if prodetail.pro_detail_image_2 %}
+                                    <div class="single_product_img">
+                                        <img src="{{ prodetail.pro_detail_image_2.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
+                                    </div>
+                                {% endif %}
+                                {% if prodetail.pro_detail_image_3 %}
+                                    <div class="single_product_img">
+                                        <img src="{{ prodetail.pro_detail_image_3.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
+                                    </div>
+                                {% endif %}
+                                {% if prodetail.pro_detail_image_4 %}
+                                    <div class="single_product_img">
+                                        <img src="{{ prodetail.pro_detail_image_4.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
+                                    </div>
+                                {% endif %}
+                                {% if prodetail.pro_detail_image_5 %}
+                                    <div class="single_product_img">
+                                        <img src="{{ prodetail.pro_detail_image_5.url }}" alt="{{ prodetail.ProDeName }}" class="img-fluid">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="single_product_text text-center">
+                                <a href="{% url 'ProDetailTZ' prodetail.id %}">{{ prodetail.ProDeName }}</a>
+                                <br>
+                                <p>{{ prodetail.Pro_detail_description|safe }}</p>
+                                <p>{{ prodetail.ProDeDetail|safe }}</p>
+                                <div class="card_area">
+                                    <div class="product_count_area">
+                                        <p>Quantity</p>
+                                        <div class="product_count d-inline-block">
+                                            <span class="product_count_item inumber-decrement">
+                                                <i class="ti-minus"></i>
+                                            </span>
+                                            <input
+                                                type="number"
+                                                class="product_count_item input-number"
+                                                value="1"
+                                                min="1"
+                                                max="10"
+                                                step="1"
+                                                data-price="{{ prodetail.ProDePrice|floatformat:2 }}">
+                                            <span class="product_count_item number-increment">
+                                                <i class="ti-plus"></i>
+                                            </span>
+                                        </div>
+                                        <p>Total Price:
+                                            <span class="price_display" data-price="{{ prodetail.ProDePrice|floatformat:2 }}">
+                                                ${{ prodetail.ProDePrice|floatformat:2 }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="add_to_cart">
+                                        <a href="{% url 'CartTZ' %}" class="btn_3">add to cart</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end of row -->
+                {% endfor %}
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

@@ -17,6 +17,8 @@ router.register('orders', OrderViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
 
+    path('data/', protected_api),
+
     path('', views.IndexTZ, name='IndexTZ'),
 
     path('ShopTZ/', ShopTZ, name='ShopTZ'),

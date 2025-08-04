@@ -36,6 +36,22 @@ def remove_from_cart(request, product_id):
 
 
 
+def protected_api(request):
+    token = request.GET.get('token')
+    if not token:
+        return JsonResponse({'error': 'Token is required'}, status=400)
+
+    if not AccessToken.objects.filter(token=token, is_active=True).exists():
+        return JsonResponse({'error': 'Invalid or inactive token'}, status=403)
+    
+    # Query all items
+    items = Item.objects.all().values('id', 'name', 'description', 'price')
+    return JsonResponse({'items': list(items)})
+
+
+
+
+
 
 
 def IndexTZ(request):
