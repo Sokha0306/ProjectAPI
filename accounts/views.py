@@ -25,7 +25,7 @@ def protected_api(request):
     
     # Query all items
     items = Item.objects.all().values('id', 'name', 'description', 'price')
-    return JsonResponse({'items': list(items)})
+    return JsonResponse({'items': ProductList(items)})
 
 
 
@@ -41,6 +41,7 @@ def IndexTZ(request):
     new_arrivals = NewArrivals.objects.all()
     popular_items = PopularItems.objects.all()
     footers = Footer.objects.all()
+    links = FooterLink.objects.all()
 
     context = {
         'new_arrivals': new_arrivals,
@@ -50,6 +51,7 @@ def IndexTZ(request):
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
         'footers' : footers,
+        'links' : links,
     }
     return render(request, 'TZ/index.html', context)
 
@@ -60,6 +62,8 @@ def ShopTZ(request):
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
     products = ProductList.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
 
     context = {
         'sliders': sliders,
@@ -67,6 +71,8 @@ def ShopTZ(request):
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
         'products' : products,
+        'footers' : footers,
+        'links' : links,
     }
     return render(request, 'TZ/shop.html', context)
     
@@ -77,12 +83,16 @@ def AboutTZ(request):
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
     abtus = AboutUs.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
         'abtus' : abtus,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/about.html', context)
@@ -96,6 +106,8 @@ def ProDetailTZ(request, id):
     SubMenus = SubMenu.objects.all()
     topBanner = TopBanner.objects.first()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
 
     context = {
         'Menus': Menus,
@@ -105,6 +117,8 @@ def ProDetailTZ(request, id):
         'prodetail': product,
         'new_arrivals' : new_arrivals,
         'popular_items' : popular_items,
+        'footers' : footers,
+        'links' : links,
     }
     return render(request, 'TZ/product_details.html', context)
 
@@ -114,12 +128,16 @@ def BlogTZ(request):
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
     blogs = Blog.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
         'blogs' : blogs,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/blog.html',context)
@@ -131,12 +149,16 @@ def BlogDetailTZ(request):
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
     blogdetails = BlogDetails.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
         'blogdetails' : blogdetails,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/blog-details.html', context)
@@ -147,11 +169,15 @@ def LoginTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/login.html', context)
@@ -161,11 +187,15 @@ def CartTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/cart.html', context)
@@ -176,11 +206,15 @@ def ConfirmTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/confirmation.html', context)
@@ -190,11 +224,15 @@ def CheckoutTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/checkout.html', context)
@@ -204,11 +242,15 @@ def ContactTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/contact.html', context)
@@ -218,11 +260,15 @@ def CheckoutTZ(request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/checkout.html', context)
@@ -232,11 +278,15 @@ def ConfirmationTZ (request):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
     context = {
         'sliders': sliders,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
+        'links' : links,
         
     }
     return render(request, 'TZ/confirmation.html', context)

@@ -28,7 +28,7 @@ class TopBanner(models.Model):
         return f'{self.id} --> {self.Logo}'
 
 
-class ImageType(models.Model): 
+class ImageType(models.Model):
     ImageTypeName = models.CharField(max_length=200, null=True) 
     ImageTypeDate = models.DateTimeField(auto_now_add=True, null=True) 
     def __str__(self):          
@@ -189,12 +189,31 @@ class AboutUs(models.Model):
             return f'{self.id} -> {self.Title_1} -> {self.Description_1} /n {self.Title_2} -> {self.Description_2}'
  
 
+
+
+
 class Footer(models.Model):
-    FooterName = models.CharField(max_length=200,null=True)
-    url_name = models.CharField(max_length=100, blank=True, null=True)
-    Footer_image = models.ImageField(upload_to='images/qrcodes/')
+    Footer_image = models.ImageField(upload_to='footer_images/', null=True, blank=True)
+
     def __str__(self):
-            return f'{self.id} -> {self.FooterName}'
+        return f'{self.id} --> {self.Footer_image}'
+
+
+
+class FooterLink(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)              # Display name
+    url_name = models.CharField(max_length=100, null=True, blank=True)          # Name of URL pattern in urls.py
+    def __str__(self):
+        return self.name
+
+    @property
+    def url(self):
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
+
     
 
 class QRCode(models.Model):
