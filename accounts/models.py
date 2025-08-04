@@ -190,39 +190,26 @@ class AboutUs(models.Model):
 
 
 class Footer(models.Model):
-    FooterName = models.CharField(max_length=200, null=True)
-    url_name = models.CharField(max_length=100, blank=True, null=True)
     Footer_image = models.ImageField(upload_to='footer_images/', null=True, blank=True)
 
     def __str__(self):
-        return f'{self.id} -> {self.FooterName}'
-    
-    @property
-    def url(self):
-        if not self.url_name:
-            return '#'
-        try:
-            return reverse(self.url_name)
-        except NoReverseMatch:
-            return '#'
+        return f'{self.id} --> {self.Footer_image}'
+
 
 
 class FooterLink(models.Model):
-    footer = models.ForeignKey(Footer, related_name='links', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)  # e.g., "About Us", "Contact"
-    url_name = models.CharField(max_length=100, blank=True, null=True)
-
+    name = models.CharField(max_length=100, null=True, blank=True)              # Display name
+    url_name = models.CharField(max_length=100, null=True, blank=True)          # Name of URL pattern in urls.py
     def __str__(self):
-        return f'{self.name} -> {self.url_name}'
+        return self.name
 
     @property
     def url(self):
-        if not self.url_name:
-            return '#'
         try:
             return reverse(self.url_name)
         except NoReverseMatch:
             return '#'
+
 
     
 
