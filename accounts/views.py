@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework import viewsets
 
@@ -13,27 +13,6 @@ from rest_framework.exceptions import AuthenticationFailed
 # Create your views here.
 
 from django.shortcuts import redirect
-
-def add_to_cart(request, product_type, product_id):
-    cart = request.session.get('cart', {})
-    # Your existing logic to add product here (fetch product, update cart)
-
-    request.session['cart'] = cart
-    return redirect('CartTZ')  # <-- redirect to your desired URL name here
-
-
-
-def view_cart(request):
-    cart = request.session.get('cart', {})
-    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    return render(request, 'TZ/cart.html', {'cart': cart, 'total_price': total_price})
-
-def remove_from_cart(request, product_id):
-    cart = request.session.get('cart', {})
-    cart.pop(str(product_id), None)
-    request.session['cart'] = cart
-    return redirect('view_cart')
-
 
 
 def protected_api(request):
@@ -61,6 +40,7 @@ def IndexTZ(request):
     sliders = Slide.objects.all()
     new_arrivals = NewArrivals.objects.all()
     popular_items = PopularItems.objects.all()
+    footers = Footer.objects.all()
 
     context = {
         'new_arrivals': new_arrivals,
@@ -69,9 +49,9 @@ def IndexTZ(request):
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
+        'footers' : footers,
     }
     return render(request, 'TZ/index.html', context)
-
 
 
 def ShopTZ(request):
@@ -108,20 +88,23 @@ def AboutTZ(request):
     return render(request, 'TZ/about.html', context)
 
 
-
 def ProDetailTZ(request, id):
     product = get_object_or_404(ProductDetail, id=id)
+    new_arrivals = get_object_or_404(NewArrivals, id=id)
+    popular_items = get_object_or_404(PopularItems, id=id)
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     topBanner = TopBanner.objects.first()
     sliders = Slide.objects.all()
 
     context = {
-        'prodetail': product,
         'Menus': Menus,
         'SubMenus': SubMenus,
         'topBanner': topBanner,
         'sliders': sliders,
+        'prodetail': product,
+        'new_arrivals' : new_arrivals,
+        'popular_items' : popular_items,
     }
     return render(request, 'TZ/product_details.html', context)
 
@@ -142,8 +125,6 @@ def BlogTZ(request):
     return render(request, 'TZ/blog.html',context)
 
 
-
-
 def BlogDetailTZ(request):
     topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
@@ -159,7 +140,6 @@ def BlogDetailTZ(request):
         
     }
     return render(request, 'TZ/blog-details.html', context)
-
 
 
 def LoginTZ(request):
@@ -261,20 +241,27 @@ def ConfirmationTZ (request):
     }
     return render(request, 'TZ/confirmation.html', context)
 
-def CartTZ (request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        
-    }
-    return render(request, 'TZ/cart.html', context)
 
+def add_to_cart(request, product_type, product_id):
+    cart = request.session.get('cart', {})
+    # Your existing logic to add product here (fetch product, update cart)
+
+    request.session['cart'] = cart
+    return redirect('CartTZ')  # <-- redirect to your desired URL name here
+
+
+
+def view_cart(request):
+    cart = request.session.get('cart', {})
+    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
+    return render(request, 'TZ/cart.html', {'cart': cart, 'total_price': total_price})
+
+
+def remove_from_cart(request, product_id):
+    cart = request.session.get('cart', {})
+    cart.pop(str(product_id), None)
+    request.session['cart'] = cart
+    return redirect('view_cart')
 
 
 
@@ -291,10 +278,7 @@ class ProductListViewSet(viewsets.ModelViewSet):
             raise AuthenticationFailed("Invalid or inactive token")
         queryset = super().get_queryset()
         return queryset
-
-
-
-    
+   
 
 
 class ProductDetailViewSet(viewsets.ModelViewSet):

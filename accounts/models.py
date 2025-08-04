@@ -188,6 +188,7 @@ class AboutUs(models.Model):
 
 class Footer(models.Model):
     FooterName = models.CharField(max_length=200,null=True)
+    url_name = models.CharField(max_length=100, blank=True, null=True)
     def __str__(self):
             return f'{self.id} -> {self.FooterName}'
     
