@@ -25,7 +25,7 @@ def protected_api(request):
     
     # Query all items
     items = Item.objects.all().values('id', 'name', 'description', 'price')
-    return JsonResponse({'items': list(items)})
+    return JsonResponse({'items': ProductList(items)})
 
 
 

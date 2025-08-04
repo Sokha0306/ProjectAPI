@@ -9,7 +9,12 @@
                                 <div class="single-footer-caption mb-30">
                                     <!-- logo -->
                                     <div class="footer-logo">
-                                        <a href="/"><img src="{% static 'StaticTZ/assets/img/logo/amorelogo.png' %}" alt="" width="250" height="130"></a>
+                                        {% if footer.Footer_image %}
+                                                <a href="/"><img src="{{ footer.Footer_image.url }}" alt="" width="250" height="130"></a>
+                                            {% else %}
+                                                <a href="/"><img src="{% static 'img/default-footer.png' %}" alt="Default Footer Image" width="250" height="130"></a>
+                                            {% endif %}
+
                                         <div class="footer-tittle">
 
                                             <div class="footer-pera">
@@ -26,11 +31,11 @@
                                 <div class="footer-tittle">
                                     <h4>About Us</h4>
                                     <ul>
-                                        <li><a href="{% url 'AboutTZ' %}">About Us</a></li>
-                                        <li><a href="{% url 'ShopTZ' %}">Our Shop</a></li>
-                                        
-                                        <li><a href="{% url 'ContactTZ' %}">  Contact Us</a></li>
+                                        {% for link in footer.links.all %}
+                                            <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+                                        {% endfor %}
                                     </ul>
+
                                 </div>
                             </div>
                         </div>

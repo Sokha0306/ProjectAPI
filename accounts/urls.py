@@ -15,7 +15,8 @@ router.register('qrcodes', QRCodeViewSet)
 router.register('orders', OrderViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    
+    path('API/', include(router.urls)),
 
     path('data/', protected_api),
 

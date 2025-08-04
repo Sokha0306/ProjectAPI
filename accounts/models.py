@@ -28,7 +28,7 @@ class TopBanner(models.Model):
         return f'{self.id} --> {self.Logo}'
 
 
-class ImageType(models.Model): 
+class ImageType(models.Model):
     ImageTypeName = models.CharField(max_length=200, null=True) 
     ImageTypeDate = models.DateTimeField(auto_now_add=True, null=True) 
     def __str__(self):          
@@ -186,12 +186,44 @@ class AboutUs(models.Model):
             return f'{self.id} -> {self.Title_1} -> {self.Description_1} /n {self.Title_2} -> {self.Description_2}'
  
 
+
+
+
 class Footer(models.Model):
-    FooterName = models.CharField(max_length=200,null=True)
+    FooterName = models.CharField(max_length=200, null=True)
     url_name = models.CharField(max_length=100, blank=True, null=True)
-    Footer_image = models.ImageField(upload_to='images/qrcodes/')
+    Footer_image = models.ImageField(upload_to='footer_images/', null=True, blank=True)
+
     def __str__(self):
-            return f'{self.id} -> {self.FooterName}'
+        return f'{self.id} -> {self.FooterName}'
+    
+    @property
+    def url(self):
+        if not self.url_name:
+            return '#'
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
+
+class FooterLink(models.Model):
+    footer = models.ForeignKey(Footer, related_name='links', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)  # e.g., "About Us", "Contact"
+    url_name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name} -> {self.url_name}'
+
+    @property
+    def url(self):
+        if not self.url_name:
+            return '#'
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
     
 
 class QRCode(models.Model):
