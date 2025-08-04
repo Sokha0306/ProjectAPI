@@ -329,7 +329,7 @@ class ProductListViewSet(viewsets.ModelViewSet):
 
 class ProductDetailViewSet(viewsets.ModelViewSet):
     queryset = Product_List_Detail.objects.all()
-    serializer_class = ProductDetailSerializer
+    serializer_class = Product_List_DetailSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
     permission_classes = [AllowAny]  # requires token
 
