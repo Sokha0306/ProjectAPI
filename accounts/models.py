@@ -89,39 +89,47 @@ class Slide(models.Model):
     def __str__(self):
             return f'{self.id} -> {self.SlideName}'
 
+class ProductCategory(models.Model):
+    CategoryName = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return f'{self.id} -> {self.CategoryName}'
+
 
 class NewArrivals(models.Model):
-    NewAImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True) 
-    NewAName = models.CharField(max_length=200,null=True)
-    NewAPrice = models.CharField(max_length=200,null=True)
+    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
+    NewAImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
+    NewAName = models.CharField(max_length=200, null=True)
+    NewAPrice = models.CharField(max_length=200, null=True)
+    NewADescription = RichTextUploadingField(null=True, blank=True)
+    NewADetail = RichTextUploadingField(null=True, blank=True)
+
     def __str__(self):
-            return f'{self.id} -> {self.NewAName}  {self.NewAImage}'
+        return f'{self.id} -> {self.NewAName}  {self.NewAImage}'
 
 
 class PopularItems(models.Model):
+    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
     PopIImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
-    PopIName = models.CharField(max_length=200,null=True)
-    PopIPrice = models.CharField(max_length=200,null=True)
+    PopIName = models.CharField(max_length=200, null=True)
+    PopIPrice = models.CharField(max_length=200, null=True)
     PopIDescription = RichTextUploadingField(null=True, blank=True)
+    PopIDetail = RichTextUploadingField(null=True, blank=True)
+
     def __str__(self):
-            return f'{self.id} -> {self.PopIName}  {self.PopIImage}'
-
-
-
-class ProductCategory(models.Model):
-    CategoryName = models.CharField(max_length=200,null=True)
-    def __str__(self):
-            return f'{self.id} -> {self.CategoryName} '
-
+        return f'{self.id} -> {self.PopIName}  {self.PopIImage}'
 
 
 class ProductList(models.Model):
     ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
-    ProLName = models.CharField(max_length=200,null=True, blank=True)
-    ProLImage= models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    ProLPrice= models.CharField(max_length=200,null=True)
+    ProLName = models.CharField(max_length=200, null=True, blank=True)
+    ProLImage = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    ProLPrice = models.CharField(max_length=200, null=True)
+    ProLDescription = RichTextUploadingField(null=True, blank=True)
+    ProLDetail = RichTextUploadingField(null=True, blank=True)
+
     def __str__(self):
-            return f'{self.id} -> {self.ProLName} -> {self.ProLImage} '
+        return f'{self.id} -> {self.ProLName} -> {self.ProLImage}'
 
 
 

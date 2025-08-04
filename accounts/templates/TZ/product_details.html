@@ -63,16 +63,27 @@
 
                     <div class="col-lg-8 product-details">
                         {% if type == 'new' %}
-                            <h2>{{ prodetail.NewAName }}</h2>
-                            <p class="price">${{ prodetail.NewAPrice }}</p>
-                        {% elif type == 'popular' %}
-                            <h2>{{ prodetail.PopIName }}</h2>
-                            <p class="price">${{ prodetail.PopIPrice }}</p>
-                            <div>{{ prodetail.PopIDescription|safe }}</div>
-                        {% elif type == 'list' %}
-                            <h2>{{ prodetail.ProLName }}</h2>
-                            <p class="price">${{ prodetail.ProLPrice }}</p>
-                        {% endif %}
+                                <h2>{{ prodetail.NewAName }}</h2>
+                                <p class="price">${{ prodetail.NewAPrice }}</p>
+                                <div>{{ prodetail.NewADescription|safe }}</div>
+                                <br>
+                                <div>{{ prodetail.NewADetail|safe }}</div>  
+                            {% elif type == 'popular' %}
+                                <h2>{{ prodetail.PopIName }}</h2>
+                                <p class="price">${{ prodetail.PopIPrice }}</p>
+                                <div>{{ prodetail.PopIDescription|safe }}</div>
+                                <br>
+                                <div>{{ prodetail.PopIDetail|safe }}</div>
+                            {% elif type == 'list' %}
+                                <h2>{{ prodetail.ProLName }}</h2>
+                                <p class="price">${{ prodetail.ProLPrice }}</p>
+                                <div>{{ prodetail.ProLDescription|safe }}</div> 
+                                <br>
+                                <div>{{ prodetail.ProLDetail|safe }}</div>
+                            {% endif %}
+                        </div>
+
+
 
                         <!-- Quantity & Total Price -->
                         <div class="card_area mt-4">
