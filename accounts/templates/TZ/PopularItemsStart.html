@@ -11,27 +11,32 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            {% for popular_item in popular_items %}
-            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                <div class="single-popular-items mb-50 text-center">
-                    <div class="popular-img">
-                        <img src="{{ popular_item.PopIImage.url }}" alt="{{ popular_item.PopIName }}">
-                        <div class="img-cap">
-                            <span>Add to cart</span>
-                        </div>
-                        <div class="favorit-items">
-                            <span class="flaticon-heart"></span>
-                        </div>
-                    </div>
-                    <div class="popular-caption">
-                        <h3><a href="{% url 'ProDetailTZ' %}">{{ popular_item.PopIName }}</a></h3>
-                        <span>$ {{ popular_item.PopIPrice }}</span>
-                    </div>
+        <div class="row flex-nowrap overflow-auto">
+    {% for popular_item in popular_items %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="min-width: 250px;">
+        <div class="single-popular-items mb-4 text-center">
+            <div class="popular-img">
+                {% if popular_item.PopIImage %}
+                    <img src="{{ popular_item.PopIImage.url }}" alt="{{ popular_item.PopIName }}" class="img-fluid">
+                {% else %}
+                    <img src="/static/default.jpg" alt="No Image" class="img-fluid">
+                {% endif %}
+                <div class="img-cap">
+                    <span>Add to cart</span>
+                </div>
+                <div class="favorit-items">
+                    <span class="flaticon-heart"></span>
                 </div>
             </div>
-            {% endfor %}
+            <div class="popular-caption">
+                <h3><a href="{% url 'ProDetailTZ' popular_item.id %}">{{ popular_item.PopIName }}</a></h3>
+                <span>${{ popular_item.PopIPrice }}</span>
+            </div>
         </div>
+    </div>
+    {% endfor %}
+</div>
+
         <div class="row justify-content-center">
             <div class="room-btn pt-70">
                 <a href="{% url 'ShopTZ' %}" class="btn view-btn1">View More Products</a>

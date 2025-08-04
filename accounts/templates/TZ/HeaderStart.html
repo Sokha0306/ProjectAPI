@@ -6,8 +6,13 @@
                     <div class="menu-wrapper">
                         <!-- Logo -->
                         <div class="logo">
-                            <img src="{{ topBanner.Logo.url }}" alt="Logo" style="width: 250px; height: auto;">
+                            {% if topBanner and topBanner.Logo %}
+                                <a href="{% url 'IndexTZ' %}">
+                                    <img src="{{ topBanner.Logo.url }}" alt="Logo" class="small-logo" style="width: 250px; height: auto;">
+                                </a>
+                            {% endif %}
                         </div>
+
                         <!-- Main-menu -->
                        <div class="main-menu d-none d-lg-block">
                             <nav>
@@ -15,24 +20,31 @@
                                 {% for menu in Menus %}
                                     {% if menu.sub_count > 0 %}
                                     <li>
-                                        <a href="#">{{ menu.MenuName }}</a>
+                                        <a href="{{ menu.url }}">
+                                        {{ menu.MenuName }}
+                                        </a>
                                         <ul class="submenu">
-                                        {% for submenu in SubMenus %}
-                                            {% if submenu.MenuID_id == menu.id %}
-                                            <li><a href="#">{{ submenu.SubMenuName }}</a></li>
-                                            {% endif %}
+                                        {% for submenu in menu.submenus.all %}
+                                            <li>
+                                            <a href="{{ submenu.url }}">
+                                                {{ submenu.SubMenuName }}
+                                            </a>
+                                            </li>
                                         {% endfor %}
                                         </ul>
                                     </li>
                                     {% else %}
-                                    <li><a href="#">{{ menu.MenuName }}</a></li>
+                                    <li>
+                                        <a href="{{ menu.url }}">
+                                        {{ menu.MenuName }}
+                                        </a>
+                                    </li>
                                     {% endif %}
                                 {% endfor %}
                                 </ul>
+
                             </nav>
                         </div>
-
-
 
                         <!-- Header Right -->
                         <div class="header-right">

@@ -3,56 +3,40 @@
 <section class="blog_area single-post-area section-padding">
          <div class="container">
             <div class="row">
-               <div class="col-lg-8 posts-list">
-                  <div class="single-post">
-                     <div class="feature-img">
-                        <img class="img-fluid" src="{% static 'StaticTZ/assets/img/blog/single_blog_1.png' %}" alt="">
+              {% for blogdetail in blogdetails %}
+                  <div class="col-lg-8 posts-list">
+                     <div class="single-post">
+                        <div class="feature-img">
+                           <img class="img-fluid" src="{{ blogdetail.BlogDeImage.url }}" alt="">
+                        </div>
+                        <div class="blog_details">
+                           <h2>{{ blogdetail.BlogDeName }}</h2>
+                           <p class="excert">
+                              {{ blogdetail.BlogDeDescription|safe }}
+                           </p>
+                        </div>
                      </div>
-                     <div class="blog_details">
-                        <h2>Second divided from form fish beast made every of seas
-                           all gathered us saying he our
-                        </h2>
-                        
-                        <p class="excert">
-                           MCSE boot camps have its supporters and its detractors. Some people do not understand why you
-                           should have to spend money on boot camp when you can get the MCSE study materials yourself at a
-                           fraction of the camp price. However, who has the willpower
-                        </p>
-                        <p>
-                           MCSE boot camps have its supporters and its detractors. Some people do not understand why you
-                           should have to spend money on boot camp when you can get the MCSE study materials yourself at a
-                           fraction of the camp price. However, who has the willpower to actually sit through a
-                           self-imposed MCSE training. who has the willpower to actually
-                        </p>
-                        
-                        <p>
-                           MCSE boot camps have its supporters and its detractors. Some people do not understand why you
-                           should have to spend money on boot camp when you can get the MCSE study materials yourself at a
-                           fraction of the camp price. However, who has the willpower
-                        </p>
-                        <p>
-                           MCSE boot camps have its supporters and its detractors. Some people do not understand why you
-                           should have to spend money on boot camp when you can get the MCSE study materials yourself at a
-                           fraction of the camp price. However, who has the willpower to actually sit through a
-                           self-imposed MCSE training. who has the willpower to actually
-                        </p>
+
+                     <div class="navigation-top">
+                        <div class="d-sm-flex justify-content-between text-center align-items-center">
+                           <div class="rating-info">
+                              <span class="rating-stars">
+                                 {% for i in "12345" %}
+                                    {% if i|add:"0" <= blogdetail.BlogDeRate|default:"0"|add:"0" %}
+                                       <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                       <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                 {% endfor %}
+                              </span>
+                              <span class="rating-text">{{ blogdetail.BlogDeRate|default:"0" }}</span>
+                           </div>
+                        </div>
                      </div>
                   </div>
-                  <div class="navigation-top">
-                     <div class="d-sm-flex justify-content-between text-center align-items-center">
-                     <div class="rating-info">
-                        <span class="rating-stars">
-                           <i class="fas fa-star text-warning"></i>
-                           <i class="fas fa-star text-warning"></i>
-                           <i class="fas fa-star text-warning"></i>
-                           <i class="fas fa-star text-warning"></i>
-                           <i class="far fa-star text-warning"></i>
-                        </span>
-                        <span class="rating-text">(4.0/5)</span>
-                     </div>
-                     </div>
-                  </div>
-               </div>
+               {% endfor %}
+
+              
                <div class="col-lg-4">
                   <div class="blog_right_sidebar">                     
                      

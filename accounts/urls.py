@@ -17,13 +17,17 @@ router.register('orders', OrderViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
 
+    path('data/', protected_api),
+
     path('', views.IndexTZ, name='IndexTZ'),
 
-    path('shop/', product_list, name='ShopTZ'),
+    path('ShopTZ/', ShopTZ, name='ShopTZ'),
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
 
-    path('ProDetailTZ/', views.ProDetailTZ, name='ProDetailTZ'),
+    # urls.py
+
+    path('ProDetailTZ/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
 
@@ -43,9 +47,7 @@ urlpatterns = [
 
     path('CartTZ/', views.CartTZ, name='CartTZ'),
 
-    path('productList/', views.product_list, name='product_list'),
-
-    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('add-to-cart/<str:product_type>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     
     path('cart/', views.view_cart, name='view_cart'),
 

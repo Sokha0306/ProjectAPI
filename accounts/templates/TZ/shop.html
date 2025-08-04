@@ -6,6 +6,7 @@
     {% include 'TZ/head.html' %}
     
     {% include 'TZ/CSS.html' %}
+    
 </head>
 
 <body>
@@ -59,7 +60,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                                 <div class="single-popular-items mb-50 text-center">
                                     <div class="popular-img">
-                                        <img src="{{ product.ProLImage.url }}" alt="{{ product.ProLName }}" style="max-width: 100%; height: auto;">
+                                        <img src="{{ product.ProLImage.url }}" alt="">
                                         <div class="img-cap">
                                             <span>Add to cart</span>
                                         </div>
@@ -68,13 +69,15 @@
                                         </div>
                                     </div>
                                     <div class="popular-caption">
-                                        <h3><a href="{% url 'ProDetailTZ' %}">{{ product.ProLName }}</a></h3>
+                                        <h3><a href="{% url 'ProDetailTZ' product.id %}">{{ product.ProLName }}</a></h3>
+
                                         <span>${{ product.ProLPrice }}</span>
                                     </div>
                                 </div>
                             </div>
                         {% endfor %}
-                    </div>               
+                    </div>
+                            
                             
                            
                             

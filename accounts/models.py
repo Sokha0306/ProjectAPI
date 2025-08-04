@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.urls import NoReverseMatch, reverse
 
 # Create your models here.
 
@@ -10,6 +11,15 @@ class AccessToken(models.Model):
 
     def __str__(self):
         return self.token
+    
+
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.name
 
 
 class TopBanner(models.Model):
@@ -36,16 +46,40 @@ class Image(models.Model):
 
 
 class Menu(models.Model):
-    MenuName = models.CharField(max_length=200, null=False, default='Menu')  # <--- update
+    MenuName = models.CharField(max_length=200, null=False, default='Menu')
+    url_name = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return f'{self.MenuName}'
 
+    @property
+    def url(self):
+        if not self.url_name:
+            return '#'
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
 
 class SubMenu(models.Model):
-    SubMenuName = models.CharField(max_length=200,null=True)
+    SubMenuName = models.CharField(max_length=200, null=True)
     MenuID = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, related_name='submenus')
+    url_name = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         return f'{self.MenuID.MenuName} -> {self.SubMenuName}'
+
+    @property
+    def url(self):
+        if not self.url_name:
+            return '#'
+        try:
+            return reverse(self.url_name)
+        except NoReverseMatch:
+            return '#'
+
+
 
 
 class Slide(models.Model):
@@ -83,8 +117,8 @@ class ProductCategory(models.Model):
 
 
 class ProductList(models.Model):
-    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True)
-    ProLName = models.CharField(max_length=200,null=True)
+    ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
+    ProLName = models.CharField(max_length=200,null=True, blank=True)
     ProLImage= models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProLPrice= models.CharField(max_length=200,null=True)
     def __str__(self):
@@ -94,12 +128,21 @@ class ProductList(models.Model):
 
 
 class ProductDetail(models.Model):
-    ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True)
+    popular_item_ID  = models.ForeignKey(PopularItems, on_delete=models.CASCADE, null=True, blank=True)
+    new_arrival_ID = models.ForeignKey(NewArrivals, on_delete=models.CASCADE, null=True, blank=True)
+    ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True, blank=True)
+    pro_detail_image_1 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_2 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_3 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_4 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    pro_detail_image_5 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProDeName = models.CharField(max_length=200,null=True)
-    ProDeDescription = RichTextUploadingField(null=True)
-    ProDeQuentity= models.CharField(max_length=200,null=True)
+    Pro_detail_description = RichTextUploadingField(null=True)
+    ProDeDetail = RichTextUploadingField(null=True)
+    ProDeQuentity = models.IntegerField(null=True, blank=True)
+    ProDePrice = models.CharField(max_length=200,null=True)
     def __str__(self):
-            return f'{self.id} -> {self.ProDeName} -> {self.ProDeDescription} '
+            return f'{self.id} -> {self.ProDeName}'
 
 
 
@@ -115,13 +158,14 @@ class Blog(models.Model):
             return f'{self.id} -> {self.BlogName} -> {self.BlogImage}'
     
 
-class BlogDetail(models.Model):
+class BlogDetails(models.Model):
     BlogID = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True)
     BlogDeName  = models.CharField(max_length=200,null=True)
-    BlogDeImage = models.ImageField(upload_to='SlideImage/', null=True, blank=True)
+    BlogDeImage = models.ImageField(upload_to='BlogImage/', null=True, blank=True)
     BlogDeDescription = RichTextUploadingField(null=True)
+    BlogDeRate = models.FloatField(default=0, null=True, blank=True)
     def __str__(self):
-            return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage} '
+            return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage}'
  
 
 class ContactUs(models.Model):
@@ -134,14 +178,17 @@ class ContactUs(models.Model):
 
 
 class AboutUs(models.Model):
-    Title = models.CharField(max_length=200,null=True)
-    Description = RichTextUploadingField(null=True)
+    Title_1 = models.CharField(max_length=200,null=True)
+    Description_1 = RichTextUploadingField(null=True)
+    Title_2 = models.CharField(max_length=200,null=True)
+    Description_2 = RichTextUploadingField(null=True)
     def __str__(self):
-            return f'{self.id} -> {self.Title} -> {self.Description}'
+            return f'{self.id} -> {self.Title_1} -> {self.Description_1} /n {self.Title_2} -> {self.Description_2}'
  
 
 class Footer(models.Model):
     FooterName = models.CharField(max_length=200,null=True)
+    url_name = models.CharField(max_length=100, blank=True, null=True)
     def __str__(self):
             return f'{self.id} -> {self.FooterName}'
     
@@ -166,3 +213,6 @@ class OrderItem(models.Model):
     productName = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     qty = models.IntegerField()
+
+
+
