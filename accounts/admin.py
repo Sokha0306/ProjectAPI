@@ -10,19 +10,14 @@ admin.site.register(Slide)
 
 admin.site.register(NewArrivals)
 admin.site.register(PopularItems)
-
 admin.site.register(ProductCategory)
 admin.site.register(ProductList)
-
-admin.site.register(Product_List_Detail)
-
+admin.site.register(ProductDetail)
 admin.site.register(Blog)
-
 admin.site.register(BlogDetails)
 admin.site.register(ContactUs)
 admin.site.register(AboutUs)
 admin.site.register(Footer)
-admin.site.register(FooterLink)
 admin.site.register(QRCode)
 admin.site.register(Order)
 admin.site.register(OrderItem)

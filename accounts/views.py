@@ -98,29 +98,29 @@ def AboutTZ(request):
     return render(request, 'TZ/about.html', context)
 
 
-def ProDetailTZ(request, id):
-    product = get_object_or_404(Product_List_Detail, id=id)
-    new_arrivals = get_object_or_404(NewArrivals, id=id)
-    popular_items = get_object_or_404(PopularItems, id=id)
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    topBanner = TopBanner.objects.first()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
+def ProDetailTZ(request, type, id):
+    # Determine which model to get the product from
+    if type == 'new':
+        product = get_object_or_404(NewArrivals, id=id)
+    elif type == 'popular':
+        product = get_object_or_404(PopularItems, id=id)
+    elif type == 'list':
+        product = get_object_or_404(ProductList, id=id)
+    else:
+        return render(request, '404.html')  # or raise Http404
 
     context = {
-        'Menus': Menus,
-        'SubMenus': SubMenus,
-        'topBanner': topBanner,
-        'sliders': sliders,
         'prodetail': product,
-        'new_arrivals' : new_arrivals,
-        'popular_items' : popular_items,
-        'footers' : footers,
-        'links' : links,
+        'type': type,
+        'Menus': Menu.objects.annotate(sub_count=Count('submenus')),
+        'SubMenus': SubMenu.objects.all(),
+        'topBanner': TopBanner.objects.first(),
+        'sliders': Slide.objects.all(),
+        'footers': Footer.objects.all(),
+        'links': FooterLink.objects.all(),
     }
     return render(request, 'TZ/product_details.html', context)
+
 
 def BlogTZ(request):
     topBanner = TopBanner.objects.first()
@@ -328,8 +328,8 @@ class ProductListViewSet(viewsets.ModelViewSet):
 
 
 class ProductDetailViewSet(viewsets.ModelViewSet):
-    queryset = Product_List_Detail.objects.all()
-    serializer_class = Product_List_DetailSerializer
+    queryset = ProductDetail.objects.all()
+    serializer_class = ProductDetailSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
     permission_classes = [AllowAny]  # requires token
 

@@ -18,7 +18,9 @@
                                     <img src="{{ new_arrival.NewAImage.url }}" alt="{{ new_arrival.NewAName }}">
                                 </div>
                                 <div class="product-caption">
-                                    <h3><a href="{% url 'ProDetailTZ' new_arrival.id %}">{{ new_arrival.NewAName }}</a></h3>
+                                    {% if new_arrival.id %}
+                                        <a href="{% url 'ProDetailTZ' 'new' new_arrival.id %}">{{ new_arrival.NewAName }}</a>
+                                    {% endif %}
 
                                     <span>${{ new_arrival.NewAPrice }}</span>
                                 </div>

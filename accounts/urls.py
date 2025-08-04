@@ -27,7 +27,7 @@ urlpatterns = [
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
     
-    path('ProDetailTZ/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
+    path('product/<str:type>/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
 

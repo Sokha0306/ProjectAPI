@@ -9,6 +9,31 @@
     
 </head>
 
+<style>
+.popular-caption a {
+    color: #222 !important;  /* Dark text */
+    text-decoration: none;   /* Optional */
+}
+
+.popular-items .product-caption span,
+    .new-product-area .product-caption span,
+    .single-popular-items .popular-caption span {
+        color: #e92a2a !important;
+    }
+    /* Reduce bottom margin of product items */
+.single-popular-items.mb-50 {
+    margin-bottom: 20px !important;
+}
+
+/* Adjust pagination margin */
+.blog-pagination {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+</style>
+
+
 <body>
     <!--? Preloader Start -->
     {% include 'TZ/PreloaderStart.html' %}
@@ -69,7 +94,7 @@
                                         </div>
                                     </div>
                                     <div class="popular-caption">
-                                        <h3><a href="{% url 'ProDetailTZ' product.id %}">{{ product.ProLName }}</a></h3>
+                                        <a href="{% url 'ProDetailTZ' 'list' product.id %}">{{ product.ProLName }}</a>
 
                                         <span>${{ product.ProLPrice }}</span>
                                     </div>
@@ -77,11 +102,6 @@
                             </div>
                         {% endfor %}
                     </div>
-                            
-                            
-                           
-                            
-
                         </div>  
                     </div>
                 </div>
@@ -89,37 +109,28 @@
             </div>
         </section>
         <!-- Latest Products End -->
-        <!--? Shop Method Start-->
-        <div class="shop-method-area">
-            <div class="container">
-                <div class="method-wrapper">
-                    <div class="row d-flex justify-content-between">
-                        <div class="col-xl-4 col-lg-4 col-md-6">
-                            <div class="single-method mb-40">
-                                <i class="ti-package"></i>
-                                <h6>Free Shipping Method</h6>
-                                <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6">
-                            <div class="single-method mb-40">
-                                <i class="ti-unlock"></i>
-                                <h6>Secure Payment System</h6>
-                                <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                            </div>
-                        </div> 
-                        <div class="col-xl-4 col-lg-4 col-md-6">
-                            <div class="single-method mb-40">
-                                <i class="ti-reload"></i>
-                                <h6>Secure Payment System</h6>
-                                <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Shop Method End-->
+        <!-- page item starts-->
+            <nav class="blog-pagination justify-content-center d-flex">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a href="#" class="page-link" aria-label="Previous">
+                            <i class="ti-angle-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#" class="page-link">1</a>
+                    </li>
+                    <li class="page-item active">
+                        <a href="#" class="page-link">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a href="#" class="page-link" aria-label="Next">
+                            <i class="ti-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        <!-- page item end-->
     </main>
     <footer>
         <!-- Footer Start-->

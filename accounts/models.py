@@ -125,13 +125,11 @@ class ProductList(models.Model):
 
 
 
-class Product_List_Detail(models.Model):
+class ProductDetail(models.Model):
+    popular_item_ID  = models.ForeignKey(PopularItems, on_delete=models.CASCADE, null=True, blank=True)
+    new_arrival_ID = models.ForeignKey(NewArrivals, on_delete=models.CASCADE, null=True, blank=True)
     ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True, blank=True)
     pro_detail_image_1 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    pro_detail_image_2 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    pro_detail_image_3 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    pro_detail_image_4 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    pro_detail_image_5 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProDeName = models.CharField(max_length=200,null=True)
     Pro_detail_description = RichTextUploadingField(null=True)
     ProDeDetail = RichTextUploadingField(null=True)
@@ -145,26 +143,23 @@ class Product_List_Detail(models.Model):
 
 class Blog(models.Model):
     BlogImage = models.ImageField(upload_to='BlogImage/', null=True, blank=True)
-    BlogName = models.CharField(max_length=200, null=True)
-    BlogDateDay = models.CharField(max_length=200, null=True)
-    BlogDateMonth = models.CharField(max_length=200, null=True)
+    BlogName = models.CharField(max_length=200,null=True)
+    BlogDateDay = models.CharField(max_length=200,null=True)
+    BlogDateMonth = models.CharField(max_length=200,null=True)
     Blogdescription = RichTextUploadingField(null=True)
     BlogRate = models.FloatField(default=0, null=True, blank=True)
-
     def __str__(self):
-        return f'{self.id} -> {self.BlogName} -> {self.BlogImage}'
-
+            return f'{self.id} -> {self.BlogName} -> {self.BlogImage}'
+    
 
 class BlogDetails(models.Model):
-    BlogID = models.OneToOneField(Blog, on_delete=models.CASCADE, null=True, related_name='detail')
-    BlogDeName = models.CharField(max_length=200, null=True)
+    BlogID = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True)
+    BlogDeName  = models.CharField(max_length=200,null=True)
     BlogDeImage = models.ImageField(upload_to='BlogImage/', null=True, blank=True)
     BlogDeDescription = RichTextUploadingField(null=True)
     BlogDeRate = models.FloatField(default=0, null=True, blank=True)
-
     def __str__(self):
-        return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage}'
-
+            return f'{self.id} -> {self.BlogDeName} -> {self.BlogDeImage}'
  
 
 class ContactUs(models.Model):
