@@ -99,7 +99,7 @@ def AboutTZ(request):
 
 
 def ProDetailTZ(request, id):
-    product = get_object_or_404(ProductDetail, id=id)
+    product = get_object_or_404(Product_List_Detail, id=id)
     new_arrivals = get_object_or_404(NewArrivals, id=id)
     popular_items = get_object_or_404(PopularItems, id=id)
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
