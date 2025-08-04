@@ -112,9 +112,14 @@
                                 </p>
                             </div>
                             <br>
-                            <div class="add_to_cart mt-3">
-                                <a href="{% url 'CartTZ' %}" class="btn_3">Add to Cart</a>
-                            </div>
+                            <form method="post" action="{% url 'add_to_cart' type prodetail.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="quantity" id="quantity" value="1">
+                                <button type="submit" class="btn_3">Add to Cart</button>
+                            </form>
+
+
+
                         </div>
                     </div>
                 </div>

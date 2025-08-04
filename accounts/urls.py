@@ -45,13 +45,14 @@ urlpatterns = [
 
     path('ConfirmationTZ/', views.ConfirmationTZ, name='ConfirmationTZ'),
 
-    path('CartTZ/', views.CartTZ, name='CartTZ'),
+    path('CartTZ/', views.view_cart, name='view_cart'),
 
-    path('add-to-cart/<str:product_type>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    
+    path('cart/add/<str:product_type>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+
+
+    path('api/remove-from-cart/<str:product_type>/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+
     path('cart/', views.view_cart, name='view_cart'),
-
-    path('remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 ]
 
 # ✅ Append static URLs properly

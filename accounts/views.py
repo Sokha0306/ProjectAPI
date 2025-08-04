@@ -293,25 +293,112 @@ def ConfirmationTZ (request):
 
 
 def add_to_cart(request, product_type, product_id):
-    cart = request.session.get('cart', {})
-    # Your existing logic to add product here (fetch product, update cart)
+    if request.method == 'POST':
+        cart = request.session.get('cart', {})
 
-    request.session['cart'] = cart
-    return redirect('CartTZ')  # <-- redirect to your desired URL name here
+        # Load product info
+        if product_type == 'list':
+            product = get_object_or_404(ProductList, id=product_id)
+            name = product.ProLName
+            price = float(product.ProLPrice)
+            image_url = product.ProLImage.url if product.ProLImage else ''
+        elif product_type == 'popular':
+            product = get_object_or_404(PopularItems, id=product_id)
+            name = product.PopIName
+            price = float(product.PopIPrice)
+            image_url = product.PopIImage.url if product.PopIImage else ''
+        elif product_type == 'new':
+            product = get_object_or_404(NewArrivals, id=product_id)
+            name = product.NewAName
+            price = float(product.NewAPrice)
+            image_url = product.NewAImage.url if product.NewAImage else ''
+        else:
+            return redirect('view_cart')
+
+        quantity = int(request.POST.get('quantity', 1))
+        cart_key = f'{product_type}-{product_id}'
+
+        if cart_key in cart:
+            cart[cart_key]['quantity'] += quantity
+        else:
+            cart[cart_key] = {
+            'productName': name,
+            'price': price,
+            'quantity': quantity,
+            'image': image_url,
+            'product_type': product_type,
+            'product_id': product_id,
+        }
+
+
+
+        request.session['cart'] = cart
+        return redirect('view_cart')
+
+    return redirect('view_cart')
+
+
+
 
 
 
 def view_cart(request):
     cart = request.session.get('cart', {})
-    total_price = sum(item['price'] * item['quantity'] for item in cart.values())
-    return render(request, 'TZ/cart.html', {'cart': cart, 'total_price': total_price})
+    total_price = 0
+    import pprint
+    pprint.pprint(cart)
 
 
-def remove_from_cart(request, product_id):
+    for item in cart.values():
+        item['subtotal'] = item['price'] * item['quantity']
+        total_price += item['subtotal']
+
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
+
+    context = {
+    'sliders': sliders,
+    'Menus': Menus,
+    'SubMenus': SubMenus,
+    'topBanner': topBanner,
+    'footers': footers,
+    'links': links,
+    'cart': cart,
+    'total_price': total_price,
+}
+    return render(request, 'TZ/cart.html', context)
+
+
+
+
+def remove_from_cart(request, product_type, product_id):
     cart = request.session.get('cart', {})
-    cart.pop(str(product_id), None)
+    key = f'{product_type}-{product_id}'
+    cart.pop(key, None)
     request.session['cart'] = cart
     return redirect('view_cart')
+
+
+
+
+
+
+def product_list(request):
+    products = ProductList.objects.all()
+    popular_items = PopularItems.objects.all()
+    new_arrivals = NewArrivals.objects.all()
+
+    context = {
+        'products': products,
+        'popular_items': popular_items,
+        'new_arrivals': new_arrivals,
+    }
+    return render(request, 'TZ/product_list_in_cart.html', context)
+
 
 
 

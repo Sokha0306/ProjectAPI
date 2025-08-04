@@ -35,50 +35,49 @@
         <div class="container">
           <div class="cart_inner">
             <div class="table-responsive">
-              <table class="table">
-                
-                <tbody>
-                  
-                  <h2>Your Cart</h2>
-                  <table>
+              <h2>Your Cart</h2>
+                <table class="table">
+                  <thead>
                     <tr>
-                      <th>Product</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                      <th>Subtotal</th>
-                      <th>Action</th>
-                    </tr>
-                    {% for id, item in cart.items %}
-                    <tr>
-                      <td>{{ item.productName }}</td>
-                      <td>{{ item.quantity }}</td>
-                      <td>${{ item.price }}</td>
-                      <td>${{ item.quantity|floatformat:2|add:item.price|floatformat:2 }}</td>
-                      <td><a href="{% url 'remove_from_cart' id %}">Remove</a></td>
-                    </tr>
-                    {% endfor %}
-                  </table>
-                  <h3>Total: ${{ total_price }}</h3>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                      <h5>Subtotal</h5>
-                    </td>
-                    <td>
-                      <h5>$2160.00</h5>
-                    </td>
-                  </tr>
-                  <tr class="shipping_area">
-                    <td></td>
-                    <td></td>
-                    <td>
-                      <h5>Shipping</h5>
-                    </td>
-                  
-                  </tr>
-                </tbody>
-              </table>
+                      <tr>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                      </tr>
+                     {% for key, item in cart.items %}
+                          <tr>
+                            <td><img src="{{ item.image|default:'/static/img/placeholder.png' }}" width="80" alt="{{ item.productName }}" /></td>
+                            <td>{{ item.productName }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.price }}</td>
+                            <td>${{ item.subtotal|floatformat:2 }}</td>
+                            <td>
+                              {% if item.product_type and item.product_id %}
+                                <a href="{% url 'remove_from_cart' item.product_type item.product_id %}">Remove</a>
+                                <pre>{{ cart|safe }}</pre>
+                              {% else %}
+                                <span style="color:red;">
+                                  Invalid data! product_type: '{{ item.product_type }}', product_id: '{{ item.product_id }}'
+                                </span>
+                              {% endif %}
+
+                            </td>
+                          </tr>
+                        {% endfor %}
+
+
+
+
+
+
+                  </tbody>
+                </table>
+
+                <h3>Total: ${{ total_price|floatformat:2 }}</h3>
+
               <div class="checkout_btn_inner float-right">
                 <a class="btn_1" href="{% url 'ShopTZ' %}">Continue Shopping</a>
                 <a class="btn_1 checkout_btn_1" href="{% url 'CheckoutTZ' %}">Proceed to checkout</a>
