@@ -6,16 +6,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register('proList', ProductListViewSet)
-router.register('proDetail', ProductDetailViewSet)
+router.register('Product_List', ProductListViewSet)
+router.register('Product_Detail', ProductDetailViewSet)
 router.register('blog', BlogViewSet)
-router.register('blogDetail', BlogDetailViewSet)
-router.register('proCategory', CategoryViewSet)
-router.register('qrcodes', QRCodeViewSet)
+router.register('blog_Detail', BlogDetailViewSet)
+router.register('product_Category', CategoryViewSet)
+router.register('qr_codes', QRCodeViewSet)
 router.register('orders', OrderViewSet)
 
+
 urlpatterns = [
-    
+
     path('API/', include(router.urls)),
 
     path('data/', protected_api),
@@ -25,9 +26,7 @@ urlpatterns = [
     path('ShopTZ/', ShopTZ, name='ShopTZ'),
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
-
-    # urls.py
-
+    
     path('ProDetailTZ/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),

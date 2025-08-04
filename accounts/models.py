@@ -34,6 +34,7 @@ class ImageType(models.Model):
     def __str__(self):          
         return f'{self.id} {self.ImageTypeName}'
     
+
 class Image(models.Model): 
     ImageName = models.CharField(max_length=200, null=True) 
     ImageURL = models.ImageField(upload_to='images/Dynamic/',null=True,blank=True) 
@@ -80,8 +81,6 @@ class SubMenu(models.Model):
             return '#'
 
 
-
-
 class Slide(models.Model):
     SlideName = models.CharField(max_length=200,null=True)
     SildeHead = RichTextUploadingField(null=True)
@@ -126,10 +125,7 @@ class ProductList(models.Model):
 
 
 
-
-class ProductDetail(models.Model):
-    popular_item_ID  = models.ForeignKey(PopularItems, on_delete=models.CASCADE, null=True, blank=True)
-    new_arrival_ID = models.ForeignKey(NewArrivals, on_delete=models.CASCADE, null=True, blank=True)
+class Product_List_Detail(models.Model):
     ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True, blank=True)
     pro_detail_image_1 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     pro_detail_image_2 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
@@ -142,7 +138,7 @@ class ProductDetail(models.Model):
     ProDeQuentity = models.IntegerField(null=True, blank=True)
     ProDePrice = models.CharField(max_length=200,null=True)
     def __str__(self):
-            return f'{self.id} -> {self.ProDeName}'
+            return f'{self.id} -> {self.ProDeName} --> {self.ProDeDetail}'
 
 
 
@@ -185,8 +181,6 @@ class AboutUs(models.Model):
     def __str__(self):
             return f'{self.id} -> {self.Title_1} -> {self.Description_1} /n {self.Title_2} -> {self.Description_2}'
  
-
-
 
 
 class Footer(models.Model):

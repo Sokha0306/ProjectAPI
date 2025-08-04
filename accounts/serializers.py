@@ -20,12 +20,12 @@ class ProductListSerializer(serializers.ModelSerializer):
         fields = ['id', 'ProLName', 'ProCategoryID','ProLPrice', 'ProLImage']
 
 
-class ProductDetailSerializer(serializers.ModelSerializer):
+class Product_List_DetailSerializer(serializers.ModelSerializer):
     productID = ProductListSerializer(read_only=True)
     productID_id = serializers.PrimaryKeyRelatedField(queryset=ProductList.objects.all(), source='productID', write_only=True)
 
     class Meta:
-        model = ProductDetail
+        model = Product_List_Detail
         fields = '__all__'
 
 

@@ -267,8 +267,6 @@ def CheckoutTZ(request):
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
         
     }
     return render(request, 'TZ/checkout.html', context)
@@ -285,8 +283,6 @@ def ConfirmationTZ (request):
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
         
     }
     return render(request, 'TZ/confirmation.html', context)
@@ -332,7 +328,7 @@ class ProductListViewSet(viewsets.ModelViewSet):
 
 
 class ProductDetailViewSet(viewsets.ModelViewSet):
-    queryset = ProductDetail.objects.all()
+    queryset = Product_List_Detail.objects.all()
     serializer_class = ProductDetailSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
     permission_classes = [AllowAny]  # requires token
