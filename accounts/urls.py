@@ -19,7 +19,7 @@ router.register('Add_tocart', CartItemViewSet)
 
 urlpatterns = [
 
-    path('api/', include(router.urls)),
+    path('API/', include(router.urls)),
 
     path('data/', protected_api),
 
