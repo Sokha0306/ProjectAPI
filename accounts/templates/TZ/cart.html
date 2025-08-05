@@ -39,43 +39,35 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <tr>
-                        <th>Image</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Subtotal</th>
-                        <th>Action</th>
-                      </tr>
-                     {% for key, item in cart.items %}
-                          <tr>
-                            <td><img src="{{ item.image|default:'/static/img/placeholder.png' }}" width="80" alt="{{ item.productName }}" /></td>
-                            <td>{{ item.productName }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>${{ item.price }}</td>
-                            <td>${{ item.subtotal|floatformat:2 }}</td>
-                            <td>
-                              {% if item.product_type and item.product_id %}
-                                <a href="{% url 'remove_from_cart' item.product_type item.product_id %}">Remove</a>
-                                <pre>{{ cart|safe }}</pre>
-                              {% else %}
-                                <span style="color:red;">
-                                  Invalid data! product_type: '{{ item.product_type }}', product_id: '{{ item.product_id }}'
-                                </span>
-                              {% endif %}
-
-                            </td>
-                          </tr>
-                        {% endfor %}
-
-
-
-
-
-
+                      <th>Image</th>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                      <th>Subtotal</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in cart %}
+                    <tr>
+                      <td>
+                        {% if item.product.ProLImage %}
+                          <img src="{{ item.product.ProLImage.url }}" width="80">
+                        {% else %}
+                          No Image
+                        {% endif %}
+                      </td>
+                      <td>{{ item.product.ProLName }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>${{ item.price }}</td>
+                      <td>${{ item.price|floatformat:2|add:item.quantity|floatformat:2 }}</td>
+                      <td>
+                        <a href="{% url 'remove_from_cart' 'list' item.product.id %}" style="color: red;">Remove</a>
+                      </td>
+                    </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
-
                 <h3>Total: ${{ total_price|floatformat:2 }}</h3>
 
               <div class="checkout_btn_inner float-right">

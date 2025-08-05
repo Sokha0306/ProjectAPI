@@ -1,7 +1,7 @@
 import json
 from rest_framework import serializers
 from .models import *
-
+from rest_framework.permissions import IsAuthenticated
 
 class ImageTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,6 +61,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = ['productName', 'price', 'qty']
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['id', 'user', 'product', 'price', 'quantity', 'subtotal']
         
 
 class OrderSerializer(serializers.ModelSerializer):

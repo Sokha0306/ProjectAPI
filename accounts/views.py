@@ -8,6 +8,9 @@ from .models import *
 from .serializers import *
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, F, DecimalField, ExpressionWrapper
+
 
 
 # Create your views here.
@@ -195,15 +198,24 @@ def CartTZ(request):
     sliders = Slide.objects.all()
     footers = Footer.objects.all()
     links = FooterLink.objects.all()
+
+    cart = CartItem.objects.filter(user=request.user)
+
+    total_price = cart.aggregate(
+        total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=DecimalField()))
+    )['total'] or 0
+
     context = {
         'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
+        'Menus': Menus,
+        'SubMenus': SubMenus,
+        'topBanner': topBanner,
+        'footers': footers,
+        'links': links,
+        'cart': cart,
+        'total_price': total_price,
     }
+
     return render(request, 'TZ/cart.html', context)
 
 
@@ -299,49 +311,31 @@ def ConfirmationTZ (request):
 
 
 def add_to_cart(request, product_type, product_id):
-    if request.method == 'POST':
-        cart = request.session.get('cart', {})
+    if product_type == 'list':
+        product = get_object_or_404(ProductList, id=product_id)
+        price = product.ProLPrice
+    elif product_type == 'popular':
+        product = get_object_or_404(PopularItems, id=product_id)
+        price = product.PopIPrice
+    elif product_type == 'new':
+        product = get_object_or_404(NewArrivals, id=product_id)
+        price = product.NewAPrice
+    else:
+        # Unknown product type, redirect or raise error
+        return redirect('CartTZ')
 
-        # Load product info
-        if product_type == 'list':
-            product = get_object_or_404(ProductList, id=product_id)
-            name = product.ProLName
-            price = float(product.ProLPrice)
-            image_url = product.ProLImage.url if product.ProLImage else ''
-        elif product_type == 'popular':
-            product = get_object_or_404(PopularItems, id=product_id)
-            name = product.PopIName
-            price = float(product.PopIPrice)
-            image_url = product.PopIImage.url if product.PopIImage else ''
-        elif product_type == 'new':
-            product = get_object_or_404(NewArrivals, id=product_id)
-            name = product.NewAName
-            price = float(product.NewAPrice)
-            image_url = product.NewAImage.url if product.NewAImage else ''
-        else:
-            return redirect('view_cart')
+    cart_item, created = CartItem.objects.get_or_create(
+        user=request.user,
+        product=product,
+        defaults={'price': price}
+    )
 
-        quantity = int(request.POST.get('quantity', 1))
-        cart_key = f'{product_type}-{product_id}'
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
 
-        if cart_key in cart:
-            cart[cart_key]['quantity'] += quantity
-        else:
-            cart[cart_key] = {
-            'productName': name,
-            'price': price,
-            'quantity': quantity,
-            'image': image_url,
-            'product_type': product_type,
-            'product_id': product_id,
-        }
+    return redirect('CartTZ')
 
-
-
-        request.session['cart'] = cart
-        return redirect('view_cart')
-
-    return redirect('view_cart')
 
 
 
@@ -382,13 +376,17 @@ def view_cart(request):
 
 
 def remove_from_cart(request, product_type, product_id):
-    cart = request.session.get('cart', {})
-    key = f'{product_type}-{product_id}'
-    cart.pop(key, None)
-    request.session['cart'] = cart
-    return redirect('view_cart')
+    if product_type == 'list':
+        product = get_object_or_404(ProductList, id=product_id)
+    elif product_type == 'popular':
+        product = get_object_or_404(PopularItems, id=product_id)
+    elif product_type == 'new':
+        product = get_object_or_404(NewArrivals, id=product_id)
+    else:
+        return redirect('CartTZ')  # Invalid type
 
-
+    CartItem.objects.filter(user=request.user, product=product).delete()
+    return redirect('CartTZ')
 
 
 
@@ -538,6 +536,19 @@ class ImageView(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     authentication_classes = [QueryParamAccessTokenAuthentication]
     permission_classes = [AllowAny]  # requires token
+
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if not AccessToken.objects.filter(token=token, is_active=True).exists():
+            from django.http import JsonResponse
+            raise AuthenticationFailed("Invalid or inactive token")
+        queryset = super().get_queryset()
+        return queryset
+
+class CartItemViewSet(viewsets.ModelViewSet):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer  # create this serializer if not created
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         token = self.request.query_params.get('token')

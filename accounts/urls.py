@@ -13,11 +13,13 @@ router.register('blog_Detail', BlogDetailViewSet)
 router.register('product_Category', CategoryViewSet)
 router.register('qr_codes', QRCodeViewSet)
 router.register('orders', OrderViewSet)
+router.register('Add_tocart', CartItemViewSet)
+
 
 
 urlpatterns = [
 
-    path('API/', include(router.urls)),
+    path('api/', include(router.urls)),
 
     path('data/', protected_api),
 

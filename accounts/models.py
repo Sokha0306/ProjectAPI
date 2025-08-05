@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.urls import NoReverseMatch, reverse
+
 
 # Create your models here.
 
@@ -235,6 +237,19 @@ class OrderItem(models.Model):
     productName = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     qty = models.IntegerField()
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductList, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    @property
+    def subtotal(self):
+         return self.price * self.quantity  
+
+    def __str__(self):
+        return f"{self.product.ProLName} x {self.quantity}"
 
 
 
