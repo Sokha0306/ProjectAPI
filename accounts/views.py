@@ -143,25 +143,31 @@ def BlogTZ(request):
     return render(request, 'TZ/blog.html',context)
 
 
-def BlogDetailTZ(request):
+def BlogDetailTZ(request, blog_id):
     topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
-    blogdetails = BlogDetails.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
+
+    try:
+        blog = Blog.objects.get(id=blog_id)
+        blog_detail = blog.detail  # Because OneToOneField with related_name='detail'
+    except Blog.DoesNotExist:
+        blog = None
+        blog_detail = None
+    except BlogDetails.DoesNotExist:
+        blog_detail = None
+
     context = {
         'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'blogdetails' : blogdetails,
-        'footers' : footers,
-        'links' : links,
-        
+        'Menus': Menus,
+        'SubMenus': SubMenus,
+        'topBanner': topBanner,
+        'blog': blog,
+        'blogdetail': blog_detail,
     }
     return render(request, 'TZ/blog-details.html', context)
+
 
 
 def LoginTZ(request):

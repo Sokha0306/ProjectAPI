@@ -9,13 +9,13 @@
                                 {% for blog in blogs %}
                                     <div class="blog_item_img">
                                         <img class="card-img rounded-0" src="{{ blog.BlogImage.url }}" alt="" style="max-width: 500px;">
-                                        <a href="{% url 'BlogDetailTZ' %}" class="blog_item_date">
+                                        <a href="{% url 'BlogDetailTZ' blog.id %}" class="blog_item_date">
                                             <h3>{{ blog.BlogDateDay|safe }}</h3>
                                             <p>{{ blog.BlogDateMonth|safe }}</p>
                                         </a>
                                     </div>
                                     <div class="blog_details">
-                                        <a class="d-inline-block" href="{% url 'BlogDetailTZ' %}">
+                                        <a class="d-inline-block" href="{% url 'BlogDetailTZ' blog.id %}">
                                             <h2>{{ blog.BlogName|safe }}</h2>
                                         </a>
                                         <p>{{ blog.Blogdescription|safe }}</p>

@@ -1,40 +1,73 @@
 {% load static %}
 
 <section class="blog_area single-post-area section-padding">
-   <div class="container">
-      <div class="row justify-content-center"> <!-- Center horizontally -->
-         {% for blogdetail in blogdetails %}
-            <div class="col-lg-8 posts-list">
-               <div class="single-post text-center"> <!-- Center text -->
-                  <div class="feature-img">
-                     <img class="img-fluid mx-auto d-block" src="{{ blogdetail.BlogDeImage.url }}" alt="" style="max-width: 500px;">
-                  </div>
-                  <div class="blog_details">
-                     <h2>{{ blogdetail.BlogDeName }}</h2>
-                     <p class="excert">
-                        {{ blogdetail.BlogDeDescription|safe }}
-                     </p>
-                  </div>
-               </div>
+    <div class="container">
+        <div class="row">
 
-               <div class="navigation-top">
-                  <div class="d-sm-flex justify-content-center text-center align-items-center">
-                     <div class="rating-info">
-                        <span class="rating-stars">
-                           {% for i in "12345" %}
-                              {% if i|add:"0" <= blogdetail.BlogDeRate|default:"0"|add:"0" %}
-                                 <i class="fas fa-star text-warning"></i>
-                              {% else %}
-                                 <i class="far fa-star text-warning"></i>
-                              {% endif %}
-                           {% endfor %}
-                        </span>
-                        <span class="rating-text">{{ blogdetail.BlogDeRate|default:"0" }}</span>
-                     </div>
-                  </div>
-               </div>
+            {# ✅ Use blogdetail directly, not a loop #}
+            {% if blogdetail %}
+                <div class="col-lg-8 posts-list">
+                    <div class="single-post">
+                        <div class="feature-img">
+                            <img class="img-fluid" src="{{ blogdetail.BlogDeImage.url }}" alt="">
+                        </div>
+                        <div class="blog_details">
+                            <h2>{{ blogdetail.BlogDeName }}</h2>
+                            <p class="excert">
+                                {{ blogdetail.BlogDeDescription|safe }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="navigation-top">
+                        <div class="d-sm-flex justify-content-between text-center align-items-center">
+                            <div class="rating-info">
+                                <span class="rating-stars">
+                                    {% for i in "12345" %}
+                                        {% if i|add:"0" <= blogdetail.BlogDeRate|default:"0"|add:"0" %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-warning"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                                <span class="rating-text">{{ blogdetail.BlogDeRate|default:"0" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-danger">Blog detail not found.</p>
+            {% endif %}
+
+            <div class="col-lg-4">
+                <div class="blog_right_sidebar">
+                    <aside class="single_sidebar_widget instagram_feeds">
+                        <h4 class="widget_title">Instagram Feeds</h4>
+                        <ul class="instagram_row flex-wrap">
+                            {% for i in "567891" %}
+                            <li>
+                                <a href="#">
+                                    <img class="img-fluid" src="{% static 'StaticTZ/assets/img/post/post_5.png' %}" alt="">
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </aside>
+
+                    <aside class="single_sidebar_widget newsletter_widget">
+                        <h4 class="widget_title">Newsletter</h4>
+                        <form action="#">
+                            <div class="form-group">
+                                <input type="email" class="form-control" onfocus="this.placeholder = ''"
+                                    onblur="this.placeholder = 'Enter email'" placeholder='Enter email' required>
+                            </div>
+                            <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                type="submit">Subscribe</button>
+                        </form>
+                    </aside>
+                </div>
             </div>
-         {% endfor %}
-      </div>
-   </div>
+        </div>
+    </div>
 </section>

@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),
 
-    path('BlogDetailTZ/', views.BlogDetailTZ, name='BlogDetailTZ'),
+    path('BlogDetailTZ/<int:blog_id>/', views.BlogDetailTZ, name='BlogDetailTZ'),
 
     path('LoginTZ/', views.LoginTZ, name='LoginTZ'),
 
