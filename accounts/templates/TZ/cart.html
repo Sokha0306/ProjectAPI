@@ -48,7 +48,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for item in cart %}
+                   {% for item in cart %}
                     <tr>
                       <td>
                         {% if item.product.ProLImage %}
@@ -60,12 +60,14 @@
                       <td>{{ item.product.ProLName }}</td>
                       <td>{{ item.quantity }}</td>
                       <td>${{ item.price }}</td>
-                      <td>${{ item.price|floatformat:2|add:item.quantity|floatformat:2 }}</td>
+                      <td>${{ item.subtotal|floatformat:2 }}</td>
                       <td>
-                        <a href="{% url 'remove_from_cart' 'list' item.product.id %}" style="color: red;">Remove</a>
+                        <a href="{% url 'remove_from_cart' 'list' item.object_id %}" style="color: red;">Remove</a>
                       </td>
                     </tr>
                     {% endfor %}
+
+
                   </tbody>
                 </table>
                 <h3>Total: ${{ total_price|floatformat:2 }}</h3>

@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
     'accounts',
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
+    
     
 ]
 ROOT_URLCONF = 'crm.urls'

@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import *
 from rest_framework.permissions import IsAuthenticated
 
+
 class ImageTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageType

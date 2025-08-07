@@ -151,10 +151,12 @@ def BlogDetailTZ(request, blog_id):
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
 
     try:
         blog = Blog.objects.get(id=blog_id)
-        blog_detail = blog.detail  # Because OneToOneField with related_name='detail'
+        blog_detail = blog.detail  
     except Blog.DoesNotExist:
         blog = None
         blog_detail = None
@@ -168,6 +170,8 @@ def BlogDetailTZ(request, blog_id):
         'topBanner': topBanner,
         'blog': blog,
         'blogdetail': blog_detail,
+        'footers' : footers,
+        'links' : links,
     }
     return render(request, 'TZ/blog-details.html', context)
 
@@ -203,7 +207,7 @@ def CartTZ(request):
 
     total_price = cart.aggregate(
         total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=DecimalField()))
-    )['total'] or 0
+    )['total']
 
     context = {
         'sliders': sliders,
@@ -310,24 +314,19 @@ def ConfirmationTZ (request):
     return render(request, 'TZ/confirmation.html', context)
 
 
+
 def add_to_cart(request, product_type, product_id):
-    if product_type == 'list':
-        product = get_object_or_404(ProductList, id=product_id)
-        price = product.ProLPrice
-    elif product_type == 'popular':
-        product = get_object_or_404(PopularItems, id=product_id)
-        price = product.PopIPrice
-    elif product_type == 'new':
-        product = get_object_or_404(NewArrivals, id=product_id)
-        price = product.NewAPrice
-    else:
-        # Unknown product type, redirect or raise error
+    if product_type != 'list':
         return redirect('CartTZ')
+
+    product = get_object_or_404(ProductList, id=product_id)
+    content_type = ContentType.objects.get_for_model(product)
 
     cart_item, created = CartItem.objects.get_or_create(
         user=request.user,
-        product=product,
-        defaults={'price': price}
+        content_type=content_type,
+        object_id=product.id,
+        defaults={'price': product.ProLPrice}
     )
 
     if not created:
@@ -338,20 +337,9 @@ def add_to_cart(request, product_type, product_id):
 
 
 
-
-
-
-
 def view_cart(request):
-    cart = request.session.get('cart', {})
-    total_price = 0
-    import pprint
-    pprint.pprint(cart)
-
-
-    for item in cart.values():
-        item['subtotal'] = item['price'] * item['quantity']
-        total_price += item['subtotal']
+    cart_items = CartItem.objects.filter(user=request.user)
+    total_price = sum(item.subtotal for item in cart_items)
 
     topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
@@ -361,31 +349,36 @@ def view_cart(request):
     links = FooterLink.objects.all()
 
     context = {
-    'sliders': sliders,
-    'Menus': Menus,
-    'SubMenus': SubMenus,
-    'topBanner': topBanner,
-    'footers': footers,
-    'links': links,
-    'cart': cart,
-    'total_price': total_price,
-}
+        'sliders': sliders,
+        'Menus': Menus,
+        'SubMenus': SubMenus,
+        'topBanner': topBanner,
+        'footers': footers,
+        'links': links,
+        'cart': cart_items,
+        'total_price': total_price,
+    }
     return render(request, 'TZ/cart.html', context)
 
 
 
 
-def remove_from_cart(request, product_type, product_id):
-    if product_type == 'list':
-        product = get_object_or_404(ProductList, id=product_id)
-    elif product_type == 'popular':
-        product = get_object_or_404(PopularItems, id=product_id)
-    elif product_type == 'new':
-        product = get_object_or_404(NewArrivals, id=product_id)
-    else:
-        return redirect('CartTZ')  # Invalid type
 
-    CartItem.objects.filter(user=request.user, product=product).delete()
+def remove_from_cart(request, product_type, product_id):
+    model_map = {
+        'list': ProductList,
+        'popular': PopularItems,
+        'new': NewArrivals
+    }
+
+    model = model_map.get(product_type)
+    if not model:
+        return redirect('CartTZ')
+
+    product = get_object_or_404(model, id=product_id)
+    content_type = ContentType.objects.get_for_model(model)
+
+    CartItem.objects.filter(user=request.user, content_type=content_type, object_id=product_id).delete()
     return redirect('CartTZ')
 
 
@@ -402,7 +395,6 @@ def product_list(request):
         'new_arrivals': new_arrivals,
     }
     return render(request, 'TZ/product_list_in_cart.html', context)
-
 
 
 
