@@ -1,3 +1,4 @@
+from decimal import Decimal, InvalidOperation
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -33,22 +34,11 @@ class TopBanner(models.Model):
         return f'{self.id} --> {self.Logo}'
 
 
-class ImageType(models.Model):
-    ImageTypeName = models.CharField(max_length=200, null=True) 
-    ImageTypeDate = models.DateTimeField(auto_now_add=True, null=True) 
-    def __str__(self):          
-        return f'{self.id} {self.ImageTypeName}'
-    
+class Gallery(models.Model):
+    GallImage = models.ImageField(upload_to='Gallery/', null=True, blank=True)
+    def __str__(self):
+        return f'{self.id} -> {self.GallImage}'
 
-class Image(models.Model): 
-    ImageName = models.CharField(max_length=200, null=True) 
-    ImageURL = models.ImageField(upload_to='images/Dynamic/',null=True,blank=True) 
-    ImageLink = models.CharField(max_length=200, null=True) 
-    ImageTypeID = models.ForeignKey(ImageType, on_delete=models.CASCADE, null=True) 
-    Active = models.CharField(max_length=200, null=True) 
-    ImageDate = models.DateTimeField(auto_now_add=True, null=True) 
-    def __str__(self):          
-        return f'{self.ImageName}'
 
 
 class Menu(models.Model):
@@ -105,36 +95,64 @@ class NewArrivals(models.Model):
     ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
     NewAImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
     NewAName = models.CharField(max_length=200, null=True)
-    NewAPrice = models.CharField(max_length=200, null=True)
+    NewAPrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     NewADescription = RichTextUploadingField(null=True, blank=True)
     NewADetail = RichTextUploadingField(null=True, blank=True)
 
-    def __str__(self):
-        return f'{self.id} -> {self.NewAName}  {self.NewAImage}'
+    @property
+    def get_price(self):
+        return Decimal(self.NewAPrice or 0)
+
+    @property
+    def get_name(self):
+        return self.NewAName or ''
+
+    @property
+    def get_image(self):
+        return self.NewAImage.url if self.NewAImage else None
+
 
 
 class PopularItems(models.Model):
     ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
     PopIImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
     PopIName = models.CharField(max_length=200, null=True)
-    PopIPrice = models.CharField(max_length=200, null=True)
+    PopIPrice =  models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     PopIDescription = RichTextUploadingField(null=True, blank=True)
     PopIDetail = RichTextUploadingField(null=True, blank=True)
 
-    def __str__(self):
-        return f'{self.id} -> {self.PopIName}  {self.PopIImage}'
+    @property
+    def get_price(self):
+        return Decimal(self.PopIPrice or 0)
+
+    @property
+    def get_name(self):
+        return self.PopIName or ''
+
+    @property
+    def get_image(self):
+        return self.PopIImage.url if self.PopIImage else None
 
 
 class ProductList(models.Model):
     ProCategoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, null=True, blank=True)
     ProLName = models.CharField(max_length=200, null=True, blank=True)
     ProLImage = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    ProLPrice = models.CharField(max_length=200, null=True)
+    ProLPrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ProLDescription = RichTextUploadingField(null=True, blank=True)
     ProLDetail = RichTextUploadingField(null=True, blank=True)
 
-    def __str__(self):
-        return f'{self.id} -> {self.ProLName} -> {self.ProLImage}'
+    @property
+    def get_price(self):
+        return Decimal(self.ProLPrice or 0)
+
+    @property
+    def get_name(self):
+        return self.ProLName or ''
+
+    @property
+    def get_image(self):
+        return self.ProLImage.url if self.ProLImage else None
 
 
 
@@ -196,6 +214,16 @@ class AboutUs(models.Model):
  
 
 
+class Privacy(models.Model):
+    Title_1 = models.CharField(max_length=200,null=True)
+    Description_1 = RichTextUploadingField(null=True)
+    Title_2 = models.CharField(max_length=200,null=True)
+    Description_2 = RichTextUploadingField(null=True)
+    def __str__(self):
+            return f'{self.id} -> {self.Title_1} -> {self.Description_1} /n {self.Title_2} -> {self.Description_2}'
+
+
+
 class Footer(models.Model):
     Footer_image = models.ImageField(upload_to='footer_images/', null=True, blank=True)
 
@@ -244,16 +272,25 @@ class OrderItem(models.Model):
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(ProductList, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    product = GenericForeignKey('content_type', 'object_id')
+
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
 
     @property
     def subtotal(self):
-         return self.price * self.quantity  
+        try:
+            return Decimal(self.price or 0) * int(self.quantity or 0)
+        except (TypeError, InvalidOperation, ValueError):
+            return Decimal('0.00')
+        
+for item in CartItem.objects.all():
+    if item.price is None:
+        item.price = Decimal('0.00')
+        item.save()
 
-    def __str__(self):
-        return f"{self.product.ProLName} x {self.quantity}"
 
 
 

@@ -19,6 +19,7 @@ router.register('Add_tocart', CartItemViewSet)
 
 urlpatterns = [
 
+    
     path('API/', include(router.urls)),
 
     path('data/', protected_api),
@@ -49,9 +50,9 @@ urlpatterns = [
 
     path('CartTZ/', views.view_cart, name='view_cart'),
 
-    path('cart/add/<str:product_type>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/add/<str:model_name>/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
 
-    path('api/remove-from-cart/<str:product_type>/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('remove-from-cart/<str:product_type>/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 
     path('cart/', views.view_cart, name='view_cart'),
 ]

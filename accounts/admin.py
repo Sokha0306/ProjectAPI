@@ -37,4 +37,6 @@ admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(AccessToken)
 admin.site.register(CartItem)
+admin.site.register(Gallery)
+admin.site.register(Privacy)
 

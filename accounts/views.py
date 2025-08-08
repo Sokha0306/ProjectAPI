@@ -1,5 +1,5 @@
 from django.db.models import Count
-from django.http import HttpRequest, JsonResponse
+from django.http import Http404, HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework import viewsets
 
@@ -33,14 +33,12 @@ def protected_api(request):
 
 
 
-
-
-
 def IndexTZ(request):
     topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
     SubMenus = SubMenu.objects.all()
     sliders = Slide.objects.all()
+    gallerys = Gallery.objects.all()
     new_arrivals = NewArrivals.objects.all()
     popular_items = PopularItems.objects.all()
     footers = Footer.objects.all()
@@ -50,6 +48,7 @@ def IndexTZ(request):
         'new_arrivals': new_arrivals,
         'popular_items': popular_items,
         'sliders': sliders,
+        'gallerys' : gallerys,
         'Menus' : Menus,
         'SubMenus' : SubMenus,
         'topBanner' : topBanner,
@@ -57,6 +56,7 @@ def IndexTZ(request):
         'links' : links,
     }
     return render(request, 'TZ/index.html', context)
+
 
 
 def ShopTZ(request):
@@ -99,6 +99,29 @@ def AboutTZ(request):
         
     }
     return render(request, 'TZ/about.html', context)
+
+
+
+def PrivacyTZ(request) :
+    topBanner = TopBanner.objects.first()
+    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
+    SubMenus = SubMenu.objects.all()
+    sliders = Slide.objects.all()
+    privacys = Privacy.objects.all()
+    footers = Footer.objects.all()
+    links = FooterLink.objects.all()
+    context = {
+        'sliders': sliders,
+        'Menus' : Menus,
+        'SubMenus' : SubMenus,
+        'topBanner' : topBanner,
+        'privacys' : privacys,
+        'footers' : footers,
+        'links' : links,
+        
+    }
+    return render(request, 'TZ/PrivacyPolicy.html', context)
+
 
 
 def ProDetailTZ(request, type, id):
@@ -315,25 +338,35 @@ def ConfirmationTZ (request):
 
 
 
-def add_to_cart(request, product_type, product_id):
-    if product_type != 'list':
-        return redirect('CartTZ')
+def add_to_cart(request, model_name, product_id):
+    user = request.user
+    quantity = int(request.POST.get('quantity', 1))
 
-    product = get_object_or_404(ProductList, id=product_id)
-    content_type = ContentType.objects.get_for_model(product)
+    try:
+        content_type = ContentType.objects.get(model=model_name)
+    except ContentType.DoesNotExist:
+        raise Http404("Product model not found.")
+
+    model_class = content_type.model_class()
+    product = model_class.objects.get(id=product_id)
+
+    price = product.get_price()
 
     cart_item, created = CartItem.objects.get_or_create(
-        user=request.user,
+        user=user,
         content_type=content_type,
-        object_id=product.id,
-        defaults={'price': product.ProLPrice}
+        object_id=product_id,
+        defaults={'quantity': quantity, 'price': price}
     )
 
     if not created:
-        cart_item.quantity += 1
+        cart_item.quantity += quantity
         cart_item.save()
 
     return redirect('CartTZ')
+
+
+
 
 
 
@@ -505,37 +538,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             raise AuthenticationFailed("Invalid or inactive token")
         queryset = super().get_queryset()
         return queryset
-
-
-
-class ImageTypeView(viewsets.ModelViewSet):
-    queryset = ImageType.objects.all()
-    serializer_class = ImageTypeSerializer
-    authentication_classes = [QueryParamAccessTokenAuthentication]
-    permission_classes = [AllowAny]  # requires token
-
-    def get_queryset(self):
-        token = self.request.query_params.get('token')
-        if not AccessToken.objects.filter(token=token, is_active=True).exists():
-            from django.http import JsonResponse
-            raise AuthenticationFailed("Invalid or inactive token")
-        queryset = super().get_queryset()
-        return queryset
-
-
-class ImageView(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    authentication_classes = [QueryParamAccessTokenAuthentication]
-    permission_classes = [AllowAny]  # requires token
-
-    def get_queryset(self):
-        token = self.request.query_params.get('token')
-        if not AccessToken.objects.filter(token=token, is_active=True).exists():
-            from django.http import JsonResponse
-            raise AuthenticationFailed("Invalid or inactive token")
-        queryset = super().get_queryset()
-        return queryset
+    
 
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
