@@ -29,7 +29,9 @@ urlpatterns = [
     path('ShopTZ/', ShopTZ, name='ShopTZ'),
 
     path('AboutTZ/', views.AboutTZ, name='AboutTZ'),
-    
+
+    path('PrivacyTZ/', views.PrivacyTZ, name='PrivacyTZ'),
+
     path('product/<str:type>/<int:id>/', views.ProDetailTZ, name='ProDetailTZ'),
 
     path('BlogTZ/', views.BlogTZ, name='BlogTZ'),

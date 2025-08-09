@@ -33,99 +33,73 @@ def protected_api(request):
 
 
 
-def IndexTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    gallerys = Gallery.objects.all()
-    new_arrivals = NewArrivals.objects.all()
-    popular_items = PopularItems.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
+from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Count, Sum, F, ExpressionWrapper, DecimalField
+from django.http import Http404
+from django.contrib.contenttypes.models import ContentType
+from .models import (
+    TopBanner, Menu, SubMenu, Slide, Gallery, NewArrivals, PopularItems,
+    Footer, FooterLink, AboutUs, Privacy, ProductList, CartItem, Blog, BlogDetails
+)
 
-    context = {
-        'new_arrivals': new_arrivals,
-        'popular_items': popular_items,
-        'sliders': sliders,
-        'gallerys' : gallerys,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
+# Helper: Common context for all views
+def get_common_context():
+    links = list(FooterLink.objects.all())
+    about_links = links[:3]
+    customer_links = links[3:6]
+
+    return {
+        'Menus': Menu.objects.annotate(sub_count=Count('submenus')),
+        'SubMenus': SubMenu.objects.all(),
+        'topBanner': TopBanner.objects.first(),
+        'sliders': Slide.objects.all(),
+        'footers': Footer.objects.all(),
+        'links': links,
+        'about_links': about_links,
+        'customer_links': customer_links,
     }
+
+
+def IndexTZ(request):
+    context = get_common_context()
+    context.update({
+        'new_arrivals': NewArrivals.objects.all(),
+        'popular_items': PopularItems.objects.all(),
+        'gallerys': Gallery.objects.all(),
+    })
     return render(request, 'TZ/index.html', context)
 
 
-
 def ShopTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    products = ProductList.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'products' : products,
-        'footers' : footers,
-        'links' : links,
-    }
+    context = get_common_context()
+    context.update({
+        'lip_gloss': ProductList.objects.filter(ProCategoryID__CategoryName__iexact='Lip Gloss'),
+        'blush': ProductList.objects.filter(ProCategoryID__CategoryName__iexact='Blush'),
+        'lip_liner_gloss_set': ProductList.objects.filter(ProCategoryID__CategoryName__iexact='Lip Liner & Gloss Set'),
+    })
     return render(request, 'TZ/shop.html', context)
-    
+
+
+
+
 
 def AboutTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    abtus = AboutUs.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'abtus' : abtus,
-        'footers' : footers,
-        'links' : links,
-        
-    }
+    context = get_common_context()
+    context.update({
+        'abtus': AboutUs.objects.all(),
+    })
     return render(request, 'TZ/about.html', context)
 
 
-
-def PrivacyTZ(request) :
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    privacys = Privacy.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'privacys' : privacys,
-        'footers' : footers,
-        'links' : links,
-        
-    }
+def PrivacyTZ(request):
+    context = get_common_context()
+    context.update({
+        'privacys': Privacy.objects.all(),
+    })
     return render(request, 'TZ/PrivacyPolicy.html', context)
 
 
-
 def ProDetailTZ(request, type, id):
-    # Determine which model to get the product from
     if type == 'new':
         product = get_object_or_404(NewArrivals, id=id)
     elif type == 'popular':
@@ -133,209 +107,74 @@ def ProDetailTZ(request, type, id):
     elif type == 'list':
         product = get_object_or_404(ProductList, id=id)
     else:
-        return render(request, '404.html')  # or raise Http404
+        return render(request, '404.html')
 
-    context = {
+    context = get_common_context()
+    context.update({
         'prodetail': product,
         'type': type,
-        'Menus': Menu.objects.annotate(sub_count=Count('submenus')),
-        'SubMenus': SubMenu.objects.all(),
-        'topBanner': TopBanner.objects.first(),
-        'sliders': Slide.objects.all(),
-        'footers': Footer.objects.all(),
-        'links': FooterLink.objects.all(),
-    }
+    })
     return render(request, 'TZ/product_details.html', context)
 
 
 def BlogTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    blogs = Blog.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'blogs' : blogs,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/blog.html',context)
+    context = get_common_context()
+    context.update({
+        'blogs': Blog.objects.all(),
+    })
+    return render(request, 'TZ/blog.html', context)
 
 
 def BlogDetailTZ(request, blog_id):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-
+    context = get_common_context()
     try:
         blog = Blog.objects.get(id=blog_id)
-        blog_detail = blog.detail  
+        blog_detail = blog.detail
     except Blog.DoesNotExist:
         blog = None
         blog_detail = None
     except BlogDetails.DoesNotExist:
         blog_detail = None
 
-    context = {
-        'sliders': sliders,
-        'Menus': Menus,
-        'SubMenus': SubMenus,
-        'topBanner': topBanner,
+    context.update({
         'blog': blog,
         'blogdetail': blog_detail,
-        'footers' : footers,
-        'links' : links,
-    }
+    })
     return render(request, 'TZ/blog-details.html', context)
 
 
-
 def LoginTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/login.html', context)
+    return render(request, 'TZ/login.html', get_common_context())
+
 
 def CartTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-
+    context = get_common_context()
     cart = CartItem.objects.filter(user=request.user)
-
     total_price = cart.aggregate(
         total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=DecimalField()))
     )['total']
 
-    context = {
-        'sliders': sliders,
-        'Menus': Menus,
-        'SubMenus': SubMenus,
-        'topBanner': topBanner,
-        'footers': footers,
-        'links': links,
+    context.update({
         'cart': cart,
         'total_price': total_price,
-    }
-
+    })
     return render(request, 'TZ/cart.html', context)
 
 
 def ConfirmTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/confirmation.html', context)
+    return render(request, 'TZ/confirmation.html', get_common_context())
+
 
 def CheckoutTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/checkout.html', context)
+    return render(request, 'TZ/checkout.html', get_common_context())
+
 
 def ContactTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/contact.html', context)
+    return render(request, 'TZ/contact.html', get_common_context())
 
-def CheckoutTZ(request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/checkout.html', context)
 
-def ConfirmationTZ (request):
-    topBanner = TopBanner.objects.first()
-    Menus = Menu.objects.annotate(sub_count=Count('submenus'))
-    SubMenus = SubMenu.objects.all()
-    sliders = Slide.objects.all()
-    footers = Footer.objects.all()
-    links = FooterLink.objects.all()
-    context = {
-        'sliders': sliders,
-        'Menus' : Menus,
-        'SubMenus' : SubMenus,
-        'topBanner' : topBanner,
-        'footers' : footers,
-        'links' : links,
-        
-    }
-    return render(request, 'TZ/confirmation.html', context)
-
+def ConfirmationTZ(request):
+    return render(request, 'TZ/confirmation.html', get_common_context())
 
 
 def add_to_cart(request, model_name, product_id):
@@ -349,7 +188,6 @@ def add_to_cart(request, model_name, product_id):
 
     model_class = content_type.model_class()
     product = model_class.objects.get(id=product_id)
-
     price = product.get_price()
 
     cart_item, created = CartItem.objects.get_or_create(
@@ -364,6 +202,7 @@ def add_to_cart(request, model_name, product_id):
         cart_item.save()
 
     return redirect('CartTZ')
+
 
 
 
