@@ -153,6 +153,9 @@ class ProductList(models.Model):
     @property
     def get_image(self):
         return self.ProLImage.url if self.ProLImage else None
+    
+    def __str__(self):
+            return f'{self.id} -> {self.ProLName} --> {self.ProLImage}'
 
 
 
@@ -272,24 +275,23 @@ class OrderItem(models.Model):
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
     product = GenericForeignKey('content_type', 'object_id')
-
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # DB field to store price at time of adding
+
+    @property
+    def product_price(self):
+        return self.product.get_price
 
     @property
     def subtotal(self):
-        try:
-            return Decimal(self.price or 0) * int(self.quantity or 0)
-        except (TypeError, InvalidOperation, ValueError):
-            return Decimal('0.00')
-        
-for item in CartItem.objects.all():
-    if item.price is None:
-        item.price = Decimal('0.00')
-        item.save()
+        return self.price * self.quantity
+
+
+
+
 
 
 

@@ -150,15 +150,15 @@ def LoginTZ(request):
 def CartTZ(request):
     context = get_common_context()
     cart = CartItem.objects.filter(user=request.user)
-    total_price = cart.aggregate(
-        total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=DecimalField()))
-    )['total']
+
+    total_price = sum(item.price * item.quantity for item in cart)
 
     context.update({
         'cart': cart,
         'total_price': total_price,
     })
     return render(request, 'TZ/cart.html', context)
+
 
 
 def ConfirmTZ(request):
@@ -177,28 +177,38 @@ def ConfirmationTZ(request):
     return render(request, 'TZ/confirmation.html', get_common_context())
 
 
-def add_to_cart(request, model_name, product_id):
-    user = request.user
-    quantity = int(request.POST.get('quantity', 1))
+from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
 
-    try:
-        content_type = ContentType.objects.get(model=model_name)
-    except ContentType.DoesNotExist:
-        raise Http404("Product model not found.")
+def add_to_cart(request, product_type, product_id):
+    if not request.user.is_authenticated:
+        return redirect('LoginTZ')
 
-    model_class = content_type.model_class()
-    product = model_class.objects.get(id=product_id)
-    price = product.get_price()
+    model_map = {
+        'list': ProductList,
+        'popular': PopularItems,
+        'new': NewArrivals,
+    }
+
+    model = model_map.get(product_type)
+    if not model:
+        return redirect('ShopTZ')
+
+    product = get_object_or_404(model, id=product_id)
+    content_type = ContentType.objects.get_for_model(model)
 
     cart_item, created = CartItem.objects.get_or_create(
-        user=user,
+        user=request.user,
         content_type=content_type,
         object_id=product_id,
-        defaults={'quantity': quantity, 'price': price}
+        defaults={
+            'quantity': 1,
+            'price': product.get_price,
+        }
     )
 
     if not created:
-        cart_item.quantity += quantity
+        cart_item.quantity += 1
         cart_item.save()
 
     return redirect('CartTZ')
@@ -237,21 +247,37 @@ def view_cart(request):
 
 
 def remove_from_cart(request, product_type, product_id):
+    if not request.user.is_authenticated:
+        return redirect('LoginTZ')
+
+    if request.method != "POST":
+        # optionally redirect or raise error
+        return redirect('CartTZ')
+
     model_map = {
         'list': ProductList,
         'popular': PopularItems,
-        'new': NewArrivals
+        'new': NewArrivals,
     }
-
+    
     model = model_map.get(product_type)
     if not model:
         return redirect('CartTZ')
 
-    product = get_object_or_404(model, id=product_id)
     content_type = ContentType.objects.get_for_model(model)
 
-    CartItem.objects.filter(user=request.user, content_type=content_type, object_id=product_id).delete()
+    cart_item = CartItem.objects.filter(
+        user=request.user,
+        content_type=content_type,
+        object_id=product_id,
+    ).first()
+
+    if cart_item:
+        cart_item.delete()
+
     return redirect('CartTZ')
+
+
 
 
 

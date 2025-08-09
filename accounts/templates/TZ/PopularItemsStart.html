@@ -15,18 +15,22 @@
         {% for popular_item in popular_items %}
             <div class="single-popular-product text-center">
                 <div class="product-img">
-                    <img src="{{ popular_item.PopIImage.url }}" alt="{{ popular_item.PopIName }}">
+                <img src="{{ popular_item.PopIImage.url }}" alt="{{ popular_item.PopIName }}">
                 </div>
                 <br>
                 <div class="product-caption">
-                    {% if popular_item.id %}
-                        <a href="{% url 'ProDetailTZ' 'popular' popular_item.id %}">{{ popular_item.PopIName }}</a>
-                    {% endif %}
-                    <br>
-                    <span>${{ popular_item.PopIPrice }}</span>
+                {% if popular_item.id %}
+                    <a href="{% url 'ProDetailTZ' 'popular' popular_item.id %}">{{ popular_item.PopIName }}</a>
+                {% endif %}
+                <br>
+                <span>${{ popular_item.PopIPrice }}</span>
                 </div>
+                
+            </form>
+
             </div>
         {% endfor %}
+
 
 </div>
 

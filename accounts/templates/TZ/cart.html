@@ -50,22 +50,31 @@
                   <tbody>
                    {% for item in cart %}
                     <tr>
-                      <td>
-                        {% if item.product.get_image %}
-                          <img src="{{ item.product.get_image }}" width="80">
-                        {% else %}
-                          No Image
-                        {% endif %}
+  <td>
+    {% if item.product.get_image %}
+      <img src="{{ item.product.get_image }}" width="80" alt="{{ item.product.get_name }}">
+    {% else %}
+      No Image
+    {% endif %}
+  </td>
 
-                        <td>{{ item.product.get_name }}</td>
-                        <td>${{ item.price }}</td>
-                        <td>${{ item.subtotal|floatformat:2 }}</td>
+  <td>{{ item.product.get_name }}</td>
+  <td>{{ item.quantity }}</td>
+  <td>${{ item.price|floatformat:2 }}</td>
+  <td>${{ item.subtotal|floatformat:2 }}</td>
 
-                      <td>
-                        <a href="{% url 'remove_from_cart' item.content_type.model item.object_id %}" style="color: red;">Remove</a>
-                      </td>
+  <td>
+    <form method="post" action="{% url 'remove_from_cart' item.content_type.model item.object_id %}">
+  {% csrf_token %}
+  <button type="submit" style="color: red; background:none; border:none; cursor:pointer;">Remove</button>
+</form>
 
-                    </tr>
+
+  </td>
+</tr>
+
+
+
                     {% endfor %}
 
 
