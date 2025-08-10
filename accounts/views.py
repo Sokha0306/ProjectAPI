@@ -33,15 +33,6 @@ def protected_api(request):
 
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Count, Sum, F, ExpressionWrapper, DecimalField
-from django.http import Http404
-from django.contrib.contenttypes.models import ContentType
-from .models import (
-    TopBanner, Menu, SubMenu, Slide, Gallery, NewArrivals, PopularItems,
-    Footer, FooterLink, AboutUs, Privacy, ProductList, CartItem, Blog, BlogDetails
-)
-
 # Helper: Common context for all views
 def get_common_context():
     links = list(FooterLink.objects.all())
@@ -99,22 +90,32 @@ def PrivacyTZ(request):
     return render(request, 'TZ/PrivacyPolicy.html', context)
 
 
+
+
 def ProDetailTZ(request, type, id):
     if type == 'new':
         product = get_object_or_404(NewArrivals, id=id)
+        prodetail = ProductDetail.objects.filter(new_arrival_ID=product).first()
     elif type == 'popular':
         product = get_object_or_404(PopularItems, id=id)
+        prodetail = ProductDetail.objects.filter(popular_item_ID=product).first()
     elif type == 'list':
         product = get_object_or_404(ProductList, id=id)
+        prodetail = ProductDetail.objects.filter(ProListID=product).first()
     else:
         return render(request, '404.html')
 
     context = get_common_context()
     context.update({
-        'prodetail': product,
+        'product': product,      # Main product info (name, price, image, etc.)
+        'prodetail': prodetail,  # Extra product detail (descriptions)
         'type': type,
     })
     return render(request, 'TZ/product_details.html', context)
+
+
+
+
 
 
 def BlogTZ(request):
@@ -177,8 +178,6 @@ def ConfirmationTZ(request):
     return render(request, 'TZ/confirmation.html', get_common_context())
 
 
-from django.contrib.contenttypes.models import ContentType
-from django.shortcuts import get_object_or_404
 
 def add_to_cart(request, product_type, product_id):
     if not request.user.is_authenticated:
@@ -188,6 +187,7 @@ def add_to_cart(request, product_type, product_id):
         'list': ProductList,
         'popular': PopularItems,
         'new': NewArrivals,
+        'detail': ProductDetail,
     }
 
     model = model_map.get(product_type)
@@ -197,18 +197,27 @@ def add_to_cart(request, product_type, product_id):
     product = get_object_or_404(model, id=product_id)
     content_type = ContentType.objects.get_for_model(model)
 
+    # Get quantity from the form (default to 1 if missing)
+    try:
+        quantity = int(request.POST.get("quantity", 1))
+    except ValueError:
+        quantity = 1
+
+    if quantity < 1:
+        quantity = 1
+
     cart_item, created = CartItem.objects.get_or_create(
         user=request.user,
         content_type=content_type,
         object_id=product_id,
         defaults={
-            'quantity': 1,
+            'quantity': quantity,
             'price': product.get_price,
         }
     )
 
     if not created:
-        cart_item.quantity += 1
+        cart_item.quantity += quantity
         cart_item.save()
 
     return redirect('CartTZ')
@@ -216,12 +225,21 @@ def add_to_cart(request, product_type, product_id):
 
 
 
-
-
-
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
-    total_price = sum(item.subtotal for item in cart_items)
+
+    cart_with_products = []
+    for item in cart_items:
+        product = item.content_object  # This gets the actual product instance
+        cart_with_products.append({
+            'id': item.id,
+            'product': product,
+            'quantity': item.quantity,
+            'price': item.price,
+            'subtotal': item.price * item.quantity,
+        })
+
+    total_price = sum(item['subtotal'] for item in cart_with_products)
 
     topBanner = TopBanner.objects.first()
     Menus = Menu.objects.annotate(sub_count=Count('submenus'))
@@ -237,7 +255,7 @@ def view_cart(request):
         'topBanner': topBanner,
         'footers': footers,
         'links': links,
-        'cart': cart_items,
+        'cart': cart_with_products,
         'total_price': total_price,
     }
     return render(request, 'TZ/cart.html', context)
@@ -246,36 +264,11 @@ def view_cart(request):
 
 
 
-def remove_from_cart(request, product_type, product_id):
-    if not request.user.is_authenticated:
-        return redirect('LoginTZ')
 
-    if request.method != "POST":
-        # optionally redirect or raise error
-        return redirect('CartTZ')
-
-    model_map = {
-        'list': ProductList,
-        'popular': PopularItems,
-        'new': NewArrivals,
-    }
-    
-    model = model_map.get(product_type)
-    if not model:
-        return redirect('CartTZ')
-
-    content_type = ContentType.objects.get_for_model(model)
-
-    cart_item = CartItem.objects.filter(
-        user=request.user,
-        content_type=content_type,
-        object_id=product_id,
-    ).first()
-
-    if cart_item:
-        cart_item.delete()
-
-    return redirect('CartTZ')
+def remove_from_cart(request, cart_item_id):
+    if request.method == "POST" and request.user.is_authenticated:
+        CartItem.objects.filter(id=cart_item_id, user=request.user).delete()
+    return redirect('CartTZ') 
 
 
 

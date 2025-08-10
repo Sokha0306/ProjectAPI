@@ -96,8 +96,6 @@ class NewArrivals(models.Model):
     NewAImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
     NewAName = models.CharField(max_length=200, null=True)
     NewAPrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    NewADescription = RichTextUploadingField(null=True, blank=True)
-    NewADetail = RichTextUploadingField(null=True, blank=True)
 
     @property
     def get_price(self):
@@ -110,6 +108,9 @@ class NewArrivals(models.Model):
     @property
     def get_image(self):
         return self.NewAImage.url if self.NewAImage else None
+    
+    def __str__(self):
+            return f'{self.id} -> {self.ProCategoryID} --> {self.NewAName} --> {self.NewAImage}'
 
 
 
@@ -118,8 +119,6 @@ class PopularItems(models.Model):
     PopIImage = models.ImageField(upload_to='ProvideImage/', null=True, blank=True)
     PopIName = models.CharField(max_length=200, null=True)
     PopIPrice =  models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    PopIDescription = RichTextUploadingField(null=True, blank=True)
-    PopIDetail = RichTextUploadingField(null=True, blank=True)
 
     @property
     def get_price(self):
@@ -132,6 +131,9 @@ class PopularItems(models.Model):
     @property
     def get_image(self):
         return self.PopIImage.url if self.PopIImage else None
+    
+    def __str__(self):
+            return f'{self.id} -> {self.ProCategoryID} --> {self.PopIName} --> {self.PopIImage}'
 
 
 class ProductList(models.Model):
@@ -139,8 +141,6 @@ class ProductList(models.Model):
     ProLName = models.CharField(max_length=200, null=True, blank=True)
     ProLImage = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
     ProLPrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    ProLDescription = RichTextUploadingField(null=True, blank=True)
-    ProLDetail = RichTextUploadingField(null=True, blank=True)
 
     @property
     def get_price(self):
@@ -155,7 +155,7 @@ class ProductList(models.Model):
         return self.ProLImage.url if self.ProLImage else None
     
     def __str__(self):
-            return f'{self.id} -> {self.ProLName} --> {self.ProLImage}'
+            return f'{self.id} -> {self.ProCategoryID} --> {self.ProLName} --> {self.ProLImage}'
 
 
 
@@ -163,14 +163,13 @@ class ProductDetail(models.Model):
     popular_item_ID  = models.ForeignKey(PopularItems, on_delete=models.CASCADE, null=True, blank=True)
     new_arrival_ID = models.ForeignKey(NewArrivals, on_delete=models.CASCADE, null=True, blank=True)
     ProListID = models.ForeignKey(ProductList, on_delete=models.CASCADE, null=True, blank=True)
-    pro_detail_image_1 = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
-    ProDeName = models.CharField(max_length=200,null=True)
-    Pro_detail_description = RichTextUploadingField(null=True)
-    ProDeDetail = RichTextUploadingField(null=True)
-    ProDeQuentity = models.IntegerField(null=True, blank=True)
-    ProDePrice = models.CharField(max_length=200,null=True)
+    ProDeImage = models.ImageField(upload_to='ProLImage/', null=True, blank=True)
+    ProDeName = models.CharField(max_length=200,null=True, blank=True)
+    ProDePrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    Pro_detail_description_1 = RichTextUploadingField(null=True, blank=True)
+    Pro_detail_description_2 = RichTextUploadingField(null=True,blank=True)
     def __str__(self):
-            return f'{self.id} -> {self.ProDeName} --> {self.ProDeDetail}'
+            return f'{self.id} -> {self.ProDeName} -> {self.ProDePrice} -> {self.Pro_detail_description_1}'
 
 
 
@@ -272,28 +271,39 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     qty = models.IntegerField()
 
-
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    product = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # DB field to store price at time of adding
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    @property
+    def image_url(self):
+        obj = self.content_object
+        if not obj:
+            return None
+        
+        # Try known image fields in order
+        for field in ['NewAImage', 'PopIImage', 'ProLImage', 'ProDeImage']:
+            if hasattr(obj, field):
+                img = getattr(obj, field)
+                if img and hasattr(img, 'url'):
+                    return img.url
+        return None
 
     @property
-    def product_price(self):
-        return self.product.get_price
-
+    def product_name(self):
+        obj = self.content_object
+        if not obj:
+            return ''
+        for field in ['NewAName', 'PopIName', 'ProLName', 'ProDeName']:
+            if hasattr(obj, field):
+                name = getattr(obj, field)
+                if name:
+                    return name
+        return ''
+    
     @property
     def subtotal(self):
         return self.price * self.quantity
-
-
-
-
-
-
-
-
-
